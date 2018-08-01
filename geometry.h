@@ -1,5 +1,4 @@
-#ifndef GEOMETRY_HEADER
-#define GEOMETRY_HEADER
+#pragma once
 
 template<typename T>
 class Point
@@ -53,5 +52,3 @@ Point<T> Point<T>::operator*(const T &k) const
 {
     return Point<T>(x * k, y * k, z * k);
 }
-
-#endif
