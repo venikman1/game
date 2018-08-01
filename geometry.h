@@ -18,10 +18,10 @@ public:
 
 template<typename T>
 Point<T>::Point(T _x, T _y, T _z)
+    : x(_x)
+    , y(_y)
+    , z(_z)
 {
-    x = _x;
-    y = _y;
-    z = _z;
 }
 
 template<typename T>
