@@ -1,19 +1,8 @@
-// The OpenGL libraries, make sure to include the GLUT and OpenGL frameworks
-#ifdef __APPLE__
-#include <GLUT/glut.h>
-#include <OpenGL/gl.h>
-#include <OpenGL/glu.h>
-#else
-#include <GL/glut.h>
-#include <GL/gl.h>
-#include <GL/glu.h>
-#endif
-
 #include <iostream>
-#include <chrono>
 
 #include "geometry.h"
 #include "utils.h"
+#include "graphics.h"
 
 // This is just an example using basic glut functionality.
 // If you want specific Apple functionality, look up AGL
