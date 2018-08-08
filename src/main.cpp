@@ -13,29 +13,24 @@
 #include <chrono>
 
 #include "geometry.h"
+#include "utils.h"
 
 // This is just an example using basic glut functionality.
 // If you want specific Apple functionality, look up AGL
-
-std::chrono::high_resolution_clock::time_point prev_time_point;
-double time_from_last_check;
-int frames_from_last_check;
 
 void init() // Called before main loop to set up the program
 {
     glClearColor(0.0, 0.0, 0.0, 0.0);
     glEnable(GL_DEPTH_TEST);
     glShadeModel(GL_SMOOTH);
-
-    prev_time_point = std::chrono::high_resolution_clock::now();
-    time_from_last_check = 0;
-    frames_from_last_check = 0;
 }
 
 // Called at the start of the program, after a glutPostRedisplay() and during idle
 // to display a frame
 void display()
 {
+    double last_update = current_timestamp();
+
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
 
@@ -80,17 +75,6 @@ void display()
         glVertex3f(40.0f, 40.0f, 100.0f);
     glEnd();
     glutSwapBuffers();
-
-    std::chrono::high_resolution_clock::time_point new_time_point = std::chrono::high_resolution_clock::now();
-    std::chrono::duration<double> dur = new_time_point - prev_time_point;
-    time_from_last_check += dur.count();
-    ++frames_from_last_check;
-    if (time_from_last_check >= 1.0) {
-        std::cout << frames_from_last_check << " FPS\n";
-        time_from_last_check = 0;
-        frames_from_last_check = 0;
-    }
-    prev_time_point = new_time_point;
 }
 
 // Called every time a window is resized to resize the projection matrix

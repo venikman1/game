@@ -99,7 +99,8 @@ namespace gm_engine {
     }
 
     template<typename T, typename Mapper>
-    Point<T> map_points(const Point<T> &p1, const Point<T> &p2, Mapper func) {
+    Point<T> map_points(const Point<T> &p1, const Point<T> &p2, Mapper func)
+    {
         return Point<T>(
             func(p1.x, p2.x),
             func(p1.y, p2.y),
@@ -108,11 +109,30 @@ namespace gm_engine {
     }
 
     template<typename T, typename Mapper>
-    Point<T> map_point(const Point<T> &p, Mapper func) {
+    Point<T> map_point(const Point<T> &p, Mapper func) 
+    {
         return Point<T>(
             func(p.x),
             func(p.y),
             func(p.z)
         );
     }
+
+    class Cube {
+    private:
+        Point<double> near_point;
+        Point<double> size;
+    
+    public:
+        static const unsigned int LEFT, RIGHT, BOTTOM, TOP, NEAR, FAR;
+
+        Cube(const Point<double>& near_point, const Point<double>& size);
+
+        bool is_intersect(const Cube& other_cube) const;
+        Point<double> get_point(unsigned int which) const;
+        Point<double> get_size() const;
+
+        void move_to(const Point<double>& position);
+        void move(const Point<double>& position_change);
+    };
 }
