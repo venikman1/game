@@ -40,8 +40,8 @@ namespace gm_engine {
     Point<double> Cube::get_point(unsigned int which) const {
         Point<double> result;
         result.x = (which & RIGHT) ? near_point.x + size.x:  near_point.x;
-        result.x = (which & TOP) ? near_point.y + size.y : near_point.y;
-        result.x = (which & FAR) ?  near_point.z + size.z : near_point.z;
+        result.y = (which & TOP) ? near_point.y + size.y : near_point.y;
+        result.z = (which & FAR) ?  near_point.z + size.z : near_point.z;
         return result;
     }
 
