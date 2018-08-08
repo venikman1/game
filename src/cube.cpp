@@ -45,7 +45,7 @@ namespace gm_engine {
         return result;
     }
 
-    Point<double> Cube::get_size() const {
+    Point<double>& Cube::get_size() {
         return size;
     }
 
