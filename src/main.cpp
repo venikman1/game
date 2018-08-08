@@ -18,19 +18,23 @@
 // This is just an example using basic glut functionality.
 // If you want specific Apple functionality, look up AGL
 
+double last_update;
+unsigned int frames_passed;
+
 void init() // Called before main loop to set up the program
 {
     glClearColor(0.0, 0.0, 0.0, 0.0);
     glEnable(GL_DEPTH_TEST);
     glShadeModel(GL_SMOOTH);
+
+    last_update = gm_utils::current_timestamp();
+    frames_passed = 0;
 }
 
 // Called at the start of the program, after a glutPostRedisplay() and during idle
 // to display a frame
 void display()
 {
-    double last_update = current_timestamp();
-
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
 
@@ -75,6 +79,15 @@ void display()
         glVertex3f(40.0f, 40.0f, 100.0f);
     glEnd();
     glutSwapBuffers();
+
+    ++frames_passed;
+    double current_update = gm_utils::current_timestamp();
+    if (current_update - last_update > 1000)
+    {
+        last_update = current_update;
+        std::cout << frames_passed << " FPS" << std::endl;
+        frames_passed = 0;
+    }
 }
 
 // Called every time a window is resized to resize the projection matrix
