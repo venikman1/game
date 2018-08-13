@@ -1,4 +1,5 @@
 #include "graphics.h"
+#include "stdio.h"
 
 #include <png.h>
 
@@ -10,6 +11,7 @@ namespace gm_engine {
         unsigned int sig_read = 0;
         int color_type, interlace_type;
         FILE *fp;
+        fp = std::fopen(filename.c_str(), "rb");
         png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
         info_ptr = png_create_info_struct(png_ptr);
         png_init_io(png_ptr, fp);
