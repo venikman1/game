@@ -1,5 +1,7 @@
 #pragma once
 
+#include <iostream>
+
 namespace gm_engine {
     template<typename T>
     class Point
@@ -19,8 +21,30 @@ namespace gm_engine {
         Point& operator*=(const T &k);
     };
 
+    class Cube {
+    private:
+        Point<double> near_point;
+        Point<double> size;
+    
+    public:
+        static const unsigned int LEFT, RIGHT, BOTTOM, TOP, NEAR, FAR;
+
+        Cube(const Point<double>& near_point, const Point<double>& size);
+
+        bool is_intersect(const Cube& other_cube) const;
+        Point<double> get_point(unsigned int which) const;
+        Point<double>& get_size();
+
+        void move_to(const Point<double>& position);
+        void move(const Point<double>& position_change);
+    };
+
+
     template<typename T>
     Point<T> operator*(const T &k, const Point<T> &p);
+
+    template<typename T>
+    std::ostream& operator<<(std::ostream& out, const Point<T> &p);
 
     template<typename T, typename Mapper>
     Point<T> map_points(const Point<T> &p1, const Point<T> &p2, Mapper func);
@@ -118,21 +142,8 @@ namespace gm_engine {
         );
     }
 
-    class Cube {
-    private:
-        Point<double> near_point;
-        Point<double> size;
-    
-    public:
-        static const unsigned int LEFT, RIGHT, BOTTOM, TOP, NEAR, FAR;
-
-        Cube(const Point<double>& near_point, const Point<double>& size);
-
-        bool is_intersect(const Cube& other_cube) const;
-        Point<double> get_point(unsigned int which) const;
-        Point<double>& get_size();
-
-        void move_to(const Point<double>& position);
-        void move(const Point<double>& position_change);
-    };
+    template<typename T>
+    std::ostream& operator<<(std::ostream& out, const Point<T> &p) {
+        return out << p.x << " " << p.y << " " << p.z;
+    }
 }

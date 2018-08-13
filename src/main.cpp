@@ -1,14 +1,24 @@
 #include <iostream>
 
-#include "geometry.h"
 #include "utils.h"
 #include "graphics.h"
+#include "world.h"
+#include "controls.h"
 
 // This is just an example using basic glut functionality.
 // If you want specific Apple functionality, look up AGL
 
 double last_update;
 unsigned int frames_passed;
+
+gm_engine::Entity player(
+    gm_engine::Cube(
+        {100.0, 0.0, 100.0},
+        {20.0, 40.0, 20.0}
+    )
+);
+
+gm_engine::Controller controller;
 
 void init() // Called before main loop to set up the program
 {
@@ -18,6 +28,8 @@ void init() // Called before main loop to set up the program
 
     last_update = gm_utils::current_timestamp();
     frames_passed = 0;
+
+    std::cout << player.get_shape().get_point(gm_engine::Cube::LEFT|gm_engine::Cube::BOTTOM|gm_engine::Cube::NEAR) << "\n";
 }
 
 // Called at the start of the program, after a glutPostRedisplay() and during idle
@@ -25,48 +37,51 @@ void init() // Called before main loop to set up the program
 void display()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glLoadIdentity();
+    // glLoadIdentity();
 
-    glColor3f(1.0f, 1.0f, 1.0f); 
-    glBegin(GL_TRIANGLES);
-        glVertex3f(0.0, 0.0, -10.0);
-        glVertex3f(100.0, 0.0, -10.0);
-        glVertex3f(0.0, 100.0, -10.0);
-    glEnd();
+    // glColor3f(1.0f, 1.0f, 1.0f); 
+    // glBegin(GL_TRIANGLES);
+    //     glVertex3f(0.0, 0.0, -10.0);
+    //     glVertex3f(100.0, 0.0, -10.0);
+    //     glVertex3f(0.0, 100.0, -10.0);
+    // glEnd();
 
-    glColor3f(0.0f, 1.0f, 1.0f); 
-    glBegin(GL_QUADS);
-        glVertex3f(25.f, 25.f, -20.0);
-        glVertex3f(200.0f, 50.0f, -20.0);
-        glVertex3f(200.0f, 150.0f, -20.0);
-        glVertex3f(50.0f, 150.0f, -20.0);
-    glEnd();
+    // glColor3f(0.0f, 1.0f, 1.0f); 
+    // glBegin(GL_QUADS);
+    //     glVertex3f(25.f, 25.f, -20.0);
+    //     glVertex3f(200.0f, 50.0f, -20.0);
+    //     glVertex3f(200.0f, 150.0f, -20.0);
+    //     glVertex3f(50.0f, 150.0f, -20.0);
+    // glEnd();
 
-    glColor3f(0.3f, 0.5f, 1.0f); 
-    glBegin(GL_QUADS);
-        glVertex3f(50.f, 50.f, 50.0);
-        glVertex3f(200.0f, 50.0f, 50.0);
-        glVertex3f(200.0f, 150.0f, 50.0);
-        glVertex3f(50.0f, 150.0f, 50.0);
-    glEnd();
+    // glColor3f(0.3f, 0.5f, 1.0f); 
+    // glBegin(GL_QUADS);
+    //     glVertex3f(50.f, 50.f, 50.0);
+    //     glVertex3f(200.0f, 50.0f, 50.0);
+    //     glVertex3f(200.0f, 150.0f, 50.0);
+    //     glVertex3f(50.0f, 150.0f, 50.0);
+    // glEnd();
 
     glColor3f(1.0f, 0.0f, 0.0f); 
     glBegin(GL_LINES);
-        glVertex3f(40.0f, 40.0f, 0.0f);
-        glVertex3f(140.0f, 40.0f, 0.0f);
+        glVertex3f(0.0f, 0.0f, 0.0f);
+        glVertex3f(100.0f, 0.0f, 0.0f);
     glEnd();
 
     glColor3f(0.0f, 1.0f, 0.0f); 
     glBegin(GL_LINES);
-        glVertex3f(40.0f, 40.0f, 0.0f);
-        glVertex3f(40.0f, 140.0f, 0.0f);
+        glVertex3f(0.0f, 0.0f, 0.0f);
+        glVertex3f(0.0f, 100.0f, 0.0f);
     glEnd();
 
     glColor3f(0.0f, 0.0f, 1.0f); 
     glBegin(GL_LINES);
-        glVertex3f(40.0f, 40.0f, 0.0f);
-        glVertex3f(40.0f, 40.0f, 100.0f);
+        glVertex3f(0.0f, 0.0f, 0.0f);
+        glVertex3f(0.0f, 0.0f, 100.0f);
     glEnd();
+
+    player.render();
+    
     glutSwapBuffers();
 
     ++frames_passed;
@@ -77,6 +92,33 @@ void display()
         std::cout << frames_passed << " FPS" << std::endl;
         frames_passed = 0;
     }
+
+    glMatrixMode(GL_MODELVIEW);
+
+    if (controller.is_key_pressed('w')) {
+        glTranslatef(0.0f, 0.0f, -2.0f);
+        player.get_shape().move({0.0, 0.0, 2.0});
+    }
+    if (controller.is_key_pressed('s')) {
+        glTranslatef(0.0f, 0.0f, 2.0f);
+        player.get_shape().move({0.0, 0.0, -2.0});
+    }
+    if (controller.is_key_pressed('a')) {
+        glTranslatef(2.0f, 0.0f, 0.0f);
+        player.get_shape().move({-2.0, 0.0, 0.0});
+    }
+    if (controller.is_key_pressed('d')) {
+        glTranslatef(-2.0f, 0.0f, 0.0f);
+        player.get_shape().move({2.0, 0.0, 0.0});
+    }
+
+    if (controller.is_key_pressed('e')) {
+        glRotatef(1.0f, 0.0f, 1.0f, 0.0f);
+    }
+    if (controller.is_key_pressed('q')) {
+        glRotatef(-1.0f, 0.0f, 1.0f, 0.0f);
+    }
+    
 }
 
 // Called every time a window is resized to resize the projection matrix
@@ -85,7 +127,7 @@ void reshape(int w, int h)
     glViewport(0, 0, w, h);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    glOrtho(0.0f, float(w), 0.0f, float(h), 200.0f, -200.0f);
+    glOrtho(-float(w)/3, float(w), -float(h)/3, float(h), 200.0f, -200.0f);
     GLfloat matrixf[16] = {  // Matrix for our projection
         1, 0, 0, 0,
         0, 1, 0, 0,
@@ -93,10 +135,10 @@ void reshape(int w, int h)
         0, 0, 0, 1,
     };
     glMultMatrixf(matrixf);
-
     
-    //glRotatef(45.0f, 1.0f, 0.0f, 0.0f);
-    //glFrustum(-0.1, 0.1, -float(h)/(10.0*float(w)), float(h)/(10.0*float(w)), 0.5, 1000.0);
+    
+    // glRotatef(45.0f, 1.0f, 0.0f, 0.0f);
+    // glFrustum(-0.1, 0.1, -float(h)/(10.0*float(w)), float(h)/(10.0*float(w)), 0.5, 1000.0);
 
     // glGetFloatv(GL_PROJECTION_MATRIX, matrixf);
     // for (int i = 0; i < 4; ++i) {
@@ -118,6 +160,15 @@ void reshape(int w, int h)
     glLoadIdentity();
 }
 
+void keyPressed(unsigned char key, int x, int y) {
+    controller.move_mouse(x, y);
+    controller.press_key(key);
+}  
+
+void keyUp(unsigned char key, int x, int y) {
+    controller.move_mouse(x, y);
+    controller.release_key(key);
+} 
 
 int main(int argc, char **argv)
 {
@@ -139,6 +190,9 @@ int main(int argc, char **argv)
     glutReshapeFunc(reshape);
     glutDisplayFunc(display);
     glutIdleFunc(display);
+
+    glutKeyboardFunc(keyPressed);
+    glutKeyboardUpFunc(keyUp);
 
     init();
 
