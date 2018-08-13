@@ -3,6 +3,7 @@
 #include "utils.h"
 #include "graphics.h"
 #include "world.h"
+#include "controls.h"
 
 // This is just an example using basic glut functionality.
 // If you want specific Apple functionality, look up AGL
@@ -16,6 +17,8 @@ gm_engine::Entity player(
         {20.0, 40.0, 20.0}
     )
 );
+
+gm_engine::Controller controller;
 
 void init() // Called before main loop to set up the program
 {
@@ -91,7 +94,31 @@ void display()
     }
 
     glMatrixMode(GL_MODELVIEW);
-    glRotatef(1.0f, 0.0f, 1.0f, 0.0f);
+
+    if (controller.is_key_pressed('w')) {
+        glTranslatef(0.0f, 0.0f, -2.0f);
+        player.get_shape().move({0.0, 0.0, 2.0});
+    }
+    if (controller.is_key_pressed('s')) {
+        glTranslatef(0.0f, 0.0f, 2.0f);
+        player.get_shape().move({0.0, 0.0, -2.0});
+    }
+    if (controller.is_key_pressed('a')) {
+        glTranslatef(2.0f, 0.0f, 0.0f);
+        player.get_shape().move({-2.0, 0.0, 0.0});
+    }
+    if (controller.is_key_pressed('d')) {
+        glTranslatef(-2.0f, 0.0f, 0.0f);
+        player.get_shape().move({2.0, 0.0, 0.0});
+    }
+
+    if (controller.is_key_pressed('e')) {
+        glRotatef(1.0f, 0.0f, 1.0f, 0.0f);
+    }
+    if (controller.is_key_pressed('q')) {
+        glRotatef(-1.0f, 0.0f, 1.0f, 0.0f);
+    }
+    
 }
 
 // Called every time a window is resized to resize the projection matrix
@@ -133,6 +160,15 @@ void reshape(int w, int h)
     glLoadIdentity();
 }
 
+void keyPressed(unsigned char key, int x, int y) {
+    controller.move_mouse(x, y);
+    controller.press_key(key);
+}  
+
+void keyUp(unsigned char key, int x, int y) {
+    controller.move_mouse(x, y);
+    controller.release_key(key);
+} 
 
 int main(int argc, char **argv)
 {
@@ -154,6 +190,9 @@ int main(int argc, char **argv)
     glutReshapeFunc(reshape);
     glutDisplayFunc(display);
     glutIdleFunc(display);
+
+    glutKeyboardFunc(keyPressed);
+    glutKeyboardUpFunc(keyUp);
 
     init();
 

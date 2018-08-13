@@ -1,11 +1,12 @@
 #pragma once
 
 #include <utility>
+#include <vector>
 
 namespace gm_engine {
     class Controller {
     private:
-        bool pressed_keys[256];
+        std::vector<bool> pressed_keys;
         int mouse_x, mouse_y;
         bool pressed_mouse;
     
