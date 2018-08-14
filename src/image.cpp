@@ -1,5 +1,4 @@
 #include "graphics.h"
-#include "stdio.h"
 
 #include <png.h>
 #include <stdio.h>
@@ -36,7 +35,7 @@ namespace gm_engine {
     }
     Image::~Image()
     {
-        // free(texture);
+        free(texture);
     }
     GLubyte* Image::read_bytes()
     {
