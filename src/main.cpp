@@ -9,6 +9,7 @@
 // If you want specific Apple functionality, look up AGL
 
 double last_update;
+double last_check;
 unsigned int frames_passed;
 
 gm_engine::Entity player(
@@ -17,7 +18,16 @@ gm_engine::Entity player(
         {20.0, 40.0, 20.0}
     )
 );
-
+gm_engine::Entity cube(
+    gm_engine::Cube(
+        {-100.0, 0.0, 100.0},
+        {20.0, 40.0, 20.0}
+    ),
+    {0.4, 0.4, 0.7},
+    {2.0, 0.0, 0.0},
+    false
+);
+gm_engine::World world;
 gm_engine::Controller controller;
 
 GLuint texture;
@@ -26,14 +36,21 @@ void init() // Called before main loop to set up the program
 {
     glClearColor(0.0, 0.0, 0.0, 0.0);
     glEnable(GL_DEPTH_TEST);
-    glShadeModel(GL_SMOOTH);
+    glShadeModel(GL_FLAT);
+
+    glEnable(GL_ALPHA_TEST); // This thing discards all transparent pixels
+    glAlphaFunc(GL_NOTEQUAL, 0.0);
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     texture = gm_engine::Image("img/cat.png").load_texture();
     
     last_update = gm_utils::current_timestamp();
+    last_check = gm_utils::current_timestamp();
     frames_passed = 0;
+
+    world.add_entity(&player);
+    world.add_entity(&cube);
 
     std::cout << player.get_shape().get_point(gm_engine::Cube::LEFT|gm_engine::Cube::BOTTOM|gm_engine::Cube::NEAR) << "\n";
 }
@@ -68,19 +85,7 @@ void display()
     //     glVertex3f(50.0f, 150.0f, 50.0);
     // glEnd();
 
-    glEnable(GL_TEXTURE_2D);
-    glColor3f(1.0f, 1.0f, 1.0f); 
-    glBegin(GL_QUADS);
-        glTexCoord2f(0.0, 0.0);
-        glVertex3f(0.0, 0.0, 0.0);
-        glTexCoord2f(0.0, 1.0);
-        glVertex3f(0.0, 300, 0.0);
-        glTexCoord2f(1.0, 1.0);
-        glVertex3f(100, 300, 0.0);
-        glTexCoord2f(1.0, 0.0);
-        glVertex3f(100.0, 0.0, 0.0);
-    glEnd();
-    glDisable(GL_TEXTURE_2D);
+    world.render();
 
     glColor3f(1.0f, 0.0f, 0.0f); 
     glBegin(GL_LINES);
@@ -100,9 +105,33 @@ void display()
         glVertex3f(0.0f, 0.0f, 100.0f);
     glEnd();
 
-    player.render();
+    glEnable(GL_TEXTURE_2D);
+    glColor4f(1.0f, 1.0f, 1.0f, 1.0f); 
+    glBegin(GL_QUADS);
+        glTexCoord2f(0.0, 0.0);
+        glVertex3f(0.0, 0.0, 0.0);
+        glTexCoord2f(0.0, 1.0);
+        glVertex3f(0.0, 300, 0.0);
+        glTexCoord2f(1.0, 1.0);
+        glVertex3f(100, 300, 0.0);
+        glTexCoord2f(1.0, 0.0);
+        glVertex3f(100.0, 0.0, 0.0);
+    glEnd();
+    glDisable(GL_TEXTURE_2D);
+
+
+    // glColor4f(0.0f, 1.0f, 1.0f, 0.5f); 
+    // glBegin(GL_QUADS);
+    //     glVertex3f(0.0, 0.0, -10.0);
+    //     glVertex3f(0.0, 300, -10.0);
+    //     glVertex3f(100, 300, -10.0);
+    //     glVertex3f(100.0, 0.0, -10.0);
+    // glEnd();
+
     
     glutSwapBuffers();
+    
+    
 
     ++frames_passed;
     double current_update = gm_utils::current_timestamp();
@@ -112,6 +141,10 @@ void display()
         std::cout << frames_passed << " FPS" << std::endl;
         frames_passed = 0;
     }
+
+    world.process_physic((current_update - last_check) / 1000);
+
+    last_check = current_update;
 
     glMatrixMode(GL_MODELVIEW);
 

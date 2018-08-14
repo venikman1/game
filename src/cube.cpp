@@ -31,9 +31,9 @@ namespace gm_engine {
         );
         
         return (
-            near_boundary.x > far_boundary.x ||
-            near_boundary.y > far_boundary.y ||
-            near_boundary.z > far_boundary.z
+            near_boundary.x <= far_boundary.x &&
+            near_boundary.y <= far_boundary.y &&
+            near_boundary.z <= far_boundary.z
         );
     }
 
