@@ -11,7 +11,6 @@ namespace gm_utils {
     void serialize(std::ostream &stream, const T &object)
     {
         size_t object_size = sizeof(object);
-        std::cout << object_size << std::endl;
         char *ptr = (char*)&object;
         stream.write(ptr, object_size);
     };
