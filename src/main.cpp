@@ -20,12 +20,18 @@ gm_engine::Entity player(
 
 gm_engine::Controller controller;
 
+GLuint texture;
+
 void init() // Called before main loop to set up the program
 {
     glClearColor(0.0, 0.0, 0.0, 0.0);
     glEnable(GL_DEPTH_TEST);
     glShadeModel(GL_SMOOTH);
 
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    texture = gm_engine::Image("img/cat.png").load_texture();
+    
     last_update = gm_utils::current_timestamp();
     frames_passed = 0;
 
@@ -61,6 +67,20 @@ void display()
     //     glVertex3f(200.0f, 150.0f, 50.0);
     //     glVertex3f(50.0f, 150.0f, 50.0);
     // glEnd();
+
+    glEnable(GL_TEXTURE_2D);
+    glColor3f(1.0f, 1.0f, 1.0f); 
+    glBegin(GL_QUADS);
+        glTexCoord2f(0.0, 0.0);
+        glVertex3f(0.0, 0.0, 0.0);
+        glTexCoord2f(0.0, 1.0);
+        glVertex3f(0.0, 300, 0.0);
+        glTexCoord2f(1.0, 1.0);
+        glVertex3f(100, 300, 0.0);
+        glTexCoord2f(1.0, 0.0);
+        glVertex3f(100.0, 0.0, 0.0);
+    glEnd();
+    glDisable(GL_TEXTURE_2D);
 
     glColor3f(1.0f, 0.0f, 0.0f); 
     glBegin(GL_LINES);

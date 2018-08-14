@@ -25,5 +25,6 @@ namespace gm_engine {
         Image(std::string filename);
         ~Image();
         GLubyte* read_bytes();
+        GLuint load_texture();
     };
 }
