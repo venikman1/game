@@ -1,7 +1,6 @@
 #pragma once
 
 #include "geometry.h"
-#include ""
 
 namespace gm_engine {
     class Scene {

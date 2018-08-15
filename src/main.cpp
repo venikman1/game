@@ -148,21 +148,26 @@ void display()
 
     glMatrixMode(GL_MODELVIEW);
 
+    player.get_velocity() = {0.0, 0.0, 0.0};
     if (controller.is_key_pressed('w')) {
-        glTranslatef(0.0f, 0.0f, -2.0f);
-        player.get_shape().move({0.0, 0.0, 2.0});
+        // glTranslatef(0.0f, 0.0f, -2.0f);
+        // player.get_shape().move({0.0, 0.0, 2.0});
+        player.get_velocity().z += 100;
     }
     if (controller.is_key_pressed('s')) {
-        glTranslatef(0.0f, 0.0f, 2.0f);
-        player.get_shape().move({0.0, 0.0, -2.0});
+        // glTranslatef(0.0f, 0.0f, 2.0f);
+        // player.get_shape().move({0.0, 0.0, -2.0});
+        player.get_velocity().z -= 100;
     }
     if (controller.is_key_pressed('a')) {
-        glTranslatef(2.0f, 0.0f, 0.0f);
-        player.get_shape().move({-2.0, 0.0, 0.0});
+        // glTranslatef(2.0f, 0.0f, 0.0f);
+        // player.get_shape().move({-2.0, 0.0, 0.0});
+        player.get_velocity().x -= 100;
     }
     if (controller.is_key_pressed('d')) {
-        glTranslatef(-2.0f, 0.0f, 0.0f);
-        player.get_shape().move({2.0, 0.0, 0.0});
+        // glTranslatef(-2.0f, 0.0f, 0.0f);
+        // player.get_shape().move({2.0, 0.0, 0.0});
+        player.get_velocity().x += 100;
     }
 
     if (controller.is_key_pressed('e')) {
