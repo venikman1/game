@@ -16,7 +16,11 @@ gm_engine::Entity player(
     gm_engine::Cube(
         {100.0, 0.0, 100.0},
         {20.0, 40.0, 20.0}
-    )
+    ),
+    {0.7, 0.7, 0.7},
+    {0.0, 0.0, 0.0},
+    1.0,
+    false
 );
 gm_engine::Entity cube(
     gm_engine::Cube(
@@ -25,6 +29,17 @@ gm_engine::Entity cube(
     ),
     {0.4, 0.4, 0.7},
     {2.0, 0.0, 0.0},
+    1.0,
+    false
+);
+gm_engine::Entity cube2(
+    gm_engine::Cube(
+        {-200.0, 0.0, 100.0},
+        {20.0, 40.0, 20.0}
+    ),
+    {0.4, 0.4, 0.7},
+    {100.0, 0.0, 0.0},
+    1.0,
     false
 );
 gm_engine::World world;
@@ -51,7 +66,7 @@ void init() // Called before main loop to set up the program
 
     world.add_entity(&player);
     world.add_entity(&cube);
-
+    world.add_entity(&cube2);
     std::cout << player.get_shape().get_point(gm_engine::Cube::LEFT|gm_engine::Cube::BOTTOM|gm_engine::Cube::NEAR) << "\n";
 }
 

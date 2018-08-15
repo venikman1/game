@@ -34,7 +34,11 @@ namespace gm_engine {
     class World {
     private:
         std::vector<Entity*> entities; // This is a little bs
-    
+        Point<double> gravity_acceleration = Point<double>(0, -100.0, 0);
+
+        void apply_gravity(double time);
+        template <typename Func> 
+        void process_physic_on_axis(double time, Func axis_getter);
     public:
         void add_entity(Entity* entity);
         void render();

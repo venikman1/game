@@ -12,6 +12,7 @@ namespace gm_engine {
         )
         , color(0.7, 0.7, 0.7)
         , velocity()
+        , mass(1.0)
         , static_object(true)
     {
     }
@@ -98,11 +99,17 @@ namespace gm_engine {
             entity->render();
         }
     }
-    void World::process_physic(double time) {
+
+    void World::apply_gravity(double time) {
         for (int i = 0; i < entities.size(); ++i) {
-            Point<double> old_velocity = entities[i]->get_velocity();
-            old_velocity.y = old_velocity.z = 0;
-            entities[i]->get_shape().move(old_velocity * time);
+            entities[i]->get_velocity() += gravity_acceleration * time;
+        }
+    }
+    template <typename Func> 
+    void World::process_physic_on_axis(double time, Func axis_getter) {
+        for (int i = 0; i < entities.size(); ++i) {
+            double old_velocity = axis_getter(entities[i]->get_velocity());
+            entities[i]->get_shape().move(axis_getter(old_velocity * time));
             std::vector<Entity*> intersections;
             for (int j = 0; j < entities.size(); ++j) {
                 if (i == j) {
@@ -110,22 +117,56 @@ namespace gm_engine {
                 }
                 if (entities[i]->get_shape().is_intersect(entities[j]->get_shape())) {
                     intersections.push_back(entities[j]);
+                    char* names[] = {"X", "Y", "Z"};
+                    std::cout << "INTERSECTION " << i << " and " << j << " on axis " << names[axis_getter.mode] << "\n";
                 }
             }
             if (!intersections.empty()) {
                 intersections.push_back(entities[i]);
-                entities[i]->get_shape().move(-old_velocity * time);
-                Point<double> impulse = 0;
+                entities[i]->get_shape().move(axis_getter(-old_velocity * time));
+                double impulse = 0;
                 double sum_mass = 0;
                 for (Entity* entity : entities) {
-                    impulse += entity->get_mass() * entity->get_velocity();
+                    impulse += entity->get_mass() * axis_getter(entity->get_velocity());
                     sum_mass += entity->get_mass();
                 }
-                Point<double> new_velocity = impulse / sum_mass;
-                for (Entity* entity : entities) {
-                    entity->get_velocity() = new_velocity;
+                double new_velocity = impulse / sum_mass;
+                for (Entity* entity : intersections) {
+                    axis_getter(entity->get_velocity()) = new_velocity;
                 } 
             }
         }
+    }
+    template <typename T>
+    struct AxisGetter {
+        enum Mode {X, Y, Z};
+
+        Mode mode;
+
+        T& operator()(Point<T>& point) {
+            switch(mode) {
+                case X: return point.x;
+                case Y: return point.y;
+                case Z: return point.z;
+            }
+        }
+
+        Point<T> operator()(const T& k) {
+            switch(mode) {
+                case X: return Point<T>(k, T(0), T(0));
+                case Y: return Point<T>(T(0), k, T(0));
+                case Z: return Point<T>(T(0), T(0), k);
+            }
+        }
+    };
+    void World::process_physic(double time) {
+        // apply_gravity(time);
+        AxisGetter<double> a;
+        a.mode = AxisGetter<double>::X;
+        process_physic_on_axis(time, a);
+        a.mode = AxisGetter<double>::Y;
+        process_physic_on_axis(time, a);
+        a.mode = AxisGetter<double>::Z;
+        process_physic_on_axis(time, a);
     }
 }
