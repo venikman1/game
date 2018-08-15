@@ -10,6 +10,7 @@ namespace gm_engine {
         Cube shape;
         Point<double> color;
         Point<double> velocity;
+        double mass;
         bool static_object;
 
     public:
@@ -18,12 +19,14 @@ namespace gm_engine {
             const Cube& shape,
             const Point<double>& color = Point<double>(0.7, 0.7, 0.7),
             const Point<double>& velocity = Point<double>(0.0, 0.0, 0.0),
+            const double mass = 1,
             bool is_static = true
         );
 
         Cube& get_shape();
         Point<double>& get_velocity();
         Point<double>& get_color();
+        double& get_mass();
 
         void render();
     };

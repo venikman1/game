@@ -16,6 +16,7 @@ namespace gm_engine {
         Point operator-(const Point &p) const;
         Point operator-() const;
         Point operator*(const T &k) const;
+        Point operator/(const T &k) const;
         Point& operator+=(const Point &p);
         Point& operator-=(const Point &p);
         Point& operator*=(const T &k);
@@ -87,6 +88,12 @@ namespace gm_engine {
     Point<T> Point<T>::operator*(const T &k) const
     {
         return Point<T>(x * k, y * k, z * k);
+    }
+
+    template<typename T>
+    Point<T> Point<T>::operator/(const T &k) const
+    {
+        return Point<T>(x / k, y / k, z / k);
     }
 
     template<typename T>
