@@ -20,7 +20,7 @@ gm_engine::Entity player(
     {0.7, 0.7, 0.7},
     {0.0, 0.0, 0.0},
     1.0,
-    false
+    true
 );
 gm_engine::Entity cube(
     gm_engine::Cube(
@@ -28,7 +28,7 @@ gm_engine::Entity cube(
         {20.0, 40.0, 20.0}
     ),
     {0.4, 0.4, 0.7},
-    {2.0, 0.0, 0.0},
+    {0.0, 0.0, 0.0},
     1.0,
     false
 );
@@ -272,6 +272,7 @@ int main(int argc, char **argv)
     // Starts the program.
     glutMainLoop();
 
+    
    
     return 0;
 }

@@ -126,10 +126,15 @@ namespace gm_engine {
                 entities[i]->get_shape().move(axis_getter(-old_velocity * time));
                 double impulse = 0;
                 double sum_mass = 0;
-                for (Entity* entity : entities) {
+
+                int i = 0;
+                for (Entity* entity : intersections) {
                     impulse += entity->get_mass() * axis_getter(entity->get_velocity());
                     sum_mass += entity->get_mass();
+
+                    std::cout << entity->get_velocity() << " is " << i++ << " velocity\n";
                 }
+                std::cout << impulse << " is impulse\n";
                 double new_velocity = impulse / sum_mass;
                 for (Entity* entity : intersections) {
                     axis_getter(entity->get_velocity()) = new_velocity;
@@ -152,11 +157,13 @@ namespace gm_engine {
         }
 
         Point<T> operator()(const T& k) {
+            Point<T> result;
             switch(mode) {
-                case X: return Point<T>(k, T(0), T(0));
-                case Y: return Point<T>(T(0), k, T(0));
-                case Z: return Point<T>(T(0), T(0), k);
+                case X: result.x = k; break;
+                case Y: result.y = k; break;
+                case Z: result.z = k; break;
             }
+            return result;
         }
     };
     void World::process_physic(double time) {
