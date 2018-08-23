@@ -200,7 +200,7 @@ void reshape(int w, int h)
     glViewport(0, 0, w, h);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    glOrtho(-float(w)/3, float(w), -float(h)/3, float(h), 200.0f, -200.0f);
+    glOrtho(-float(w)/3, float(w), -float(h)/3, float(h), 1000.0f, -1000.0f);
     GLfloat matrixf[16] = {  // Matrix for our projection
         1, 0, 0, 0,
         0, 1, 0, 0,

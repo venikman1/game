@@ -117,8 +117,6 @@ namespace gm_engine {
                 }
                 if (entities[i]->get_shape().is_intersect(entities[j]->get_shape())) {
                     intersections.push_back(entities[j]);
-                    char* names[] = {"X", "Y", "Z"};
-                    std::cout << "INTERSECTION " << i << " and " << j << " on axis " << names[axis_getter.mode] << "\n";
                 }
             }
             if (!intersections.empty()) {
@@ -126,15 +124,10 @@ namespace gm_engine {
                 entities[i]->get_shape().move(axis_getter(-old_velocity * time));
                 double impulse = 0;
                 double sum_mass = 0;
-
-                int i = 0;
                 for (Entity* entity : intersections) {
                     impulse += entity->get_mass() * axis_getter(entity->get_velocity());
                     sum_mass += entity->get_mass();
-
-                    std::cout << entity->get_velocity() << " is " << i++ << " velocity\n";
                 }
-                std::cout << impulse << " is impulse\n";
                 double new_velocity = impulse / sum_mass;
                 for (Entity* entity : intersections) {
                     axis_getter(entity->get_velocity()) = new_velocity;
