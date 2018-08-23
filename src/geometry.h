@@ -3,6 +3,8 @@
 #include <iostream>
 
 namespace gm_engine {
+    const double EPS = 1e-6;
+
     template<typename T>
     class Point
     {
@@ -10,7 +12,7 @@ namespace gm_engine {
         T x;
         T y;
         T z;
-        Point(T _x = 0, T _y = 0, T _z = 0);
+        Point(T _x = T(), T _y = T(), T _z = T());
         Point operator+(const Point &p) const;
         Point operator+() const;
         Point operator-(const Point &p) const;
@@ -152,5 +154,13 @@ namespace gm_engine {
     template<typename T>
     std::ostream& operator<<(std::ostream& out, const Point<T> &p) {
         return out << p.x << " " << p.y << " " << p.z;
+    }
+
+    template<typename T>
+    int sign(const T& k) {
+        if (k > T())
+            return 1;
+        else
+            return -1;
     }
 }

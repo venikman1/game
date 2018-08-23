@@ -14,6 +14,7 @@ namespace gm_engine {
         , velocity()
         , mass(1.0)
         , static_object(true)
+        , collision()
     {
     }
     Entity::Entity(const Cube& shape, const Point<double>& color, const Point<double>& velocity, const double mass, bool is_static)
@@ -22,6 +23,7 @@ namespace gm_engine {
         , velocity(velocity)
         , mass(mass)
         , static_object(is_static)
+        , collision()
     {
     }
 
@@ -36,6 +38,12 @@ namespace gm_engine {
     }
     double& Entity::get_mass() {
         return mass;
+    }
+    bool& Entity::is_static() {
+        return static_object;
+    }
+    Point<Entity::Collision>& Entity::get_collision() {
+        return collision;
     }
     
     inline void gl_set_point(const Point<double>& p) {
@@ -89,6 +97,16 @@ namespace gm_engine {
         gl_set_point(shape.get_point(Cube::LEFT | Cube::TOP | Cube::FAR));
         glEnd();
     }
+    Entity* intersect_with_entities(std::vector<Entity*>& entities, Entity* checking_entity) {
+        for (auto entity : entities) {
+            if (entity == checking_entity)
+                continue;
+            if (entity->get_shape().is_intersect(checking_entity->get_shape())) {
+                return entity;
+            }
+        }
+        return 0;
+    }
 
 
     void World::add_entity(Entity* entity) {
@@ -102,45 +120,87 @@ namespace gm_engine {
 
     void World::apply_gravity(double time) {
         for (int i = 0; i < entities.size(); ++i) {
-            entities[i]->get_velocity() += gravity_acceleration * time;
+            if (!entities[i]->is_static())
+                entities[i]->get_velocity() += gravity_acceleration * time;
         }
     }
+
+    void set_collision(Entity::Collision& collision, double speed) {
+        if (speed > 0)
+            collision = Entity::RIGHT;
+        else
+            collision = Entity::LEFT;
+    }
+
     template <typename Func> 
     void World::process_physic_on_axis(double time, Func axis_getter) {
         for (int i = 0; i < entities.size(); ++i) {
+            axis_getter(entities[i]->get_collision()) = Entity::NONE;
+
             double old_velocity = axis_getter(entities[i]->get_velocity());
             entities[i]->get_shape().move(axis_getter(old_velocity * time));
             std::vector<Entity*> intersections;
-            for (int j = 0; j < entities.size(); ++j) {
-                if (i == j) {
-                    continue;
-                }
-                if (entities[i]->get_shape().is_intersect(entities[j]->get_shape())) {
-                    intersections.push_back(entities[j]);
+            if (entities[i]->is_static()) {  // Collision is not set for static objects
+                for (int j = 0; j < entities.size(); ++j) {
+                    if (i == j) {
+                        continue;
+                    }
+                    if (!entities[j]->is_static() && entities[i]->get_shape().is_intersect(entities[j]->get_shape())) {
+                        //entities[i]->get_shape().move(axis_getter(-old_velocity * time));
+                        axis_getter(entities[j]->get_velocity()) = axis_getter(entities[i]->get_velocity());
+                        entities[j]->get_shape().move(axis_getter(axis_getter(entities[j]->get_velocity()) * time));
+                    }
                 }
             }
-            if (!intersections.empty()) {
-                intersections.push_back(entities[i]);
-                entities[i]->get_shape().move(axis_getter(-old_velocity * time));
-                double impulse = 0;
-                double sum_mass = 0;
-                for (Entity* entity : intersections) {
-                    impulse += entity->get_mass() * axis_getter(entity->get_velocity());
-                    sum_mass += entity->get_mass();
+            else {
+                bool collide_with_static = false;
+                for (int j = 0; j < entities.size(); ++j) {
+                    if (i == j) {
+                        continue;
+                    }
+                    if (entities[i]->get_shape().is_intersect(entities[j]->get_shape())) {
+                        if (entities[j]->is_static()) {
+                            entities[i]->get_shape().move(axis_getter(-old_velocity * time));
+                            axis_getter(entities[i]->get_velocity()) = axis_getter(entities[j]->get_velocity());
+                            entities[i]->get_shape().move(axis_getter(axis_getter(entities[i]->get_velocity()) * time));
+                            collide_with_static = true;
+                            set_collision(axis_getter(entities[i]->get_collision()), old_velocity);
+                            break;
+                        }
+                        intersections.push_back(entities[j]);
+                    }
                 }
-                double new_velocity = impulse / sum_mass;
-                for (Entity* entity : intersections) {
-                    axis_getter(entity->get_velocity()) = new_velocity;
-                } 
+                if (collide_with_static)
+                    continue;
+                if (!intersections.empty()) {
+                    set_collision(axis_getter(entities[i]->get_collision()), old_velocity);
+                    Entity::Collision another_side = (axis_getter(entities[i]->get_collision()) == Entity::LEFT ? Entity::RIGHT : Entity::LEFT);
+                    for (Entity* entity : intersections) {
+                        axis_getter(entity->get_collision()) = another_side;
+                    }
+                    intersections.push_back(entities[i]);
+                    entities[i]->get_shape().move(axis_getter(-old_velocity * time));
+                    double impulse = 0;
+                    double sum_mass = 0;
+                    for (Entity* entity : intersections) {
+                        impulse += entity->get_mass() * axis_getter(entity->get_velocity());
+                        sum_mass += entity->get_mass();
+                    }
+                    double new_velocity = impulse / sum_mass;
+                    for (Entity* entity : intersections) {
+                        axis_getter(entity->get_velocity()) = new_velocity;
+                    }
+                }
             }
         }
     }
-    template <typename T>
+    
     struct AxisGetter {
         enum Mode {X, Y, Z};
 
         Mode mode;
 
+        template <typename T>
         T& operator()(Point<T>& point) {
             switch(mode) {
                 case X: return point.x;
@@ -149,6 +209,7 @@ namespace gm_engine {
             }
         }
 
+        template <typename T>
         Point<T> operator()(const T& k) {
             Point<T> result;
             switch(mode) {
@@ -160,13 +221,20 @@ namespace gm_engine {
         }
     };
     void World::process_physic(double time) {
-        // apply_gravity(time);
-        AxisGetter<double> a;
-        a.mode = AxisGetter<double>::X;
+        apply_gravity(time);
+        AxisGetter a;
+        a.mode = AxisGetter::X;
         process_physic_on_axis(time, a);
-        a.mode = AxisGetter<double>::Y;
+        a.mode = AxisGetter::Y;
         process_physic_on_axis(time, a);
-        a.mode = AxisGetter<double>::Z;
+        a.mode = AxisGetter::Z;
         process_physic_on_axis(time, a);
+
+        for (auto entity : entities) {
+            if (entity->get_collision().y == gm_engine::Entity::LEFT) {
+                entity->get_velocity().x += sign(entity->get_velocity().x) * gravity_acceleration.y * 0.3 * time;
+                entity->get_velocity().z += sign(entity->get_velocity().z) * gravity_acceleration.y * 0.3 * time;
+            }
+        }
     }
 }

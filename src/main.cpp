@@ -20,7 +20,7 @@ gm_engine::Entity player(
     {0.7, 0.7, 0.7},
     {0.0, 0.0, 0.0},
     1.0,
-    true
+    false
 );
 gm_engine::Entity cube(
     gm_engine::Cube(
@@ -41,6 +41,26 @@ gm_engine::Entity cube2(
     {100.0, 0.0, 0.0},
     1.0,
     false
+);
+gm_engine::Entity cube3(
+    gm_engine::Cube(
+        {-200.0, -20.0, 200.0},
+        {20.0, 40.0, 20.0}
+    ),
+    {0.4, 0.4, 0.7},
+    {50.0, 0.0, 0.0},
+    1.0,
+    true
+);
+gm_engine::Entity floor(
+    gm_engine::Cube(
+        {-200.0, -30.0, 0.0},
+        {700.0, 10.0, 700.0}
+    ),
+    {0.9, 0.9, 0.9},
+    {0.0, 0.0, 0.0},
+    1.0,
+    true
 );
 gm_engine::World world;
 gm_engine::Controller controller;
@@ -67,6 +87,8 @@ void init() // Called before main loop to set up the program
     world.add_entity(&player);
     world.add_entity(&cube);
     world.add_entity(&cube2);
+    world.add_entity(&cube3);
+    world.add_entity(&floor);
     std::cout << player.get_shape().get_point(gm_engine::Cube::LEFT|gm_engine::Cube::BOTTOM|gm_engine::Cube::NEAR) << "\n";
 }
 
@@ -163,7 +185,7 @@ void display()
 
     glMatrixMode(GL_MODELVIEW);
 
-    player.get_velocity() = {0.0, 0.0, 0.0};
+    player.get_velocity().x = player.get_velocity().z = 0;
     if (controller.is_key_pressed('w')) {
         // glTranslatef(0.0f, 0.0f, -2.0f);
         // player.get_shape().move({0.0, 0.0, 2.0});
@@ -184,6 +206,11 @@ void display()
         // player.get_shape().move({2.0, 0.0, 0.0});
         player.get_velocity().x += 100;
     }
+    if (controller.is_key_pressed(' ')) {
+        if (player.get_collision().y == gm_engine::Entity::LEFT)
+            player.get_velocity().y += 100;
+    }
+    // std::cerr << player.get_collision() << "\n";
 
     if (controller.is_key_pressed('e')) {
         glRotatef(1.0f, 0.0f, 1.0f, 0.0f);
