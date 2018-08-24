@@ -4,7 +4,7 @@
 #include <iostream>
 #include <fstream>
 
-namespace gm_utils {
+namespace gm_engine {
     double current_timestamp();
 
     template<typename T>

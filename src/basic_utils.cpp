@@ -1,6 +1,6 @@
 #include "utils.h"
 
-namespace gm_utils {
+namespace gm_engine {
     double current_timestamp()
     {
         return ((std::chrono::duration< double, std::milli> )(std::chrono::duration_cast< std::chrono::milliseconds >(

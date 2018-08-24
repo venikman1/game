@@ -80,8 +80,8 @@ void init() // Called before main loop to set up the program
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     texture = gm_engine::Image("img/cat.png").load_texture();
     
-    last_update = gm_utils::current_timestamp();
-    last_check = gm_utils::current_timestamp();
+    last_update = gm_engine::current_timestamp();
+    last_check = gm_engine::current_timestamp();
     frames_passed = 0;
 
     world.add_entity(&player);
@@ -171,7 +171,7 @@ void display()
     
 
     ++frames_passed;
-    double current_update = gm_utils::current_timestamp();
+    double current_update = gm_engine::current_timestamp();
     if (current_update - last_update > 1000)
     {
         last_update = current_update;
