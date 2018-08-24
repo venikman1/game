@@ -185,31 +185,37 @@ void display()
 
     glMatrixMode(GL_MODELVIEW);
 
-    player.get_velocity().x = player.get_velocity().z = 0;
-    if (controller.is_key_pressed('w')) {
-        // glTranslatef(0.0f, 0.0f, -2.0f);
-        // player.get_shape().move({0.0, 0.0, 2.0});
-        player.get_velocity().z += 100;
-    }
-    if (controller.is_key_pressed('s')) {
-        // glTranslatef(0.0f, 0.0f, 2.0f);
-        // player.get_shape().move({0.0, 0.0, -2.0});
-        player.get_velocity().z -= 100;
-    }
-    if (controller.is_key_pressed('a')) {
-        // glTranslatef(2.0f, 0.0f, 0.0f);
-        // player.get_shape().move({-2.0, 0.0, 0.0});
-        player.get_velocity().x -= 100;
-    }
-    if (controller.is_key_pressed('d')) {
-        // glTranslatef(-2.0f, 0.0f, 0.0f);
-        // player.get_shape().move({2.0, 0.0, 0.0});
-        player.get_velocity().x += 100;
-    }
-    if (controller.is_key_pressed(' ')) {
-        if (player.get_collision().y == gm_engine::Entity::LEFT)
+    gm_engine::Entity* standing_on = player.get_collision_from_left_side().y;
+    if (standing_on) {
+        player.get_velocity().x = standing_on->get_velocity().x;
+        player.get_velocity().z = standing_on->get_velocity().z;
+
+        if (controller.is_key_pressed('w')) {
+            // glTranslatef(0.0f, 0.0f, -2.0f);
+            // player.get_shape().move({0.0, 0.0, 2.0});
+            player.get_velocity().z += 100;
+        }
+        if (controller.is_key_pressed('s')) {
+            // glTranslatef(0.0f, 0.0f, 2.0f);
+            // player.get_shape().move({0.0, 0.0, -2.0});
+            player.get_velocity().z -= 100;
+        }
+        if (controller.is_key_pressed('a')) {
+            // glTranslatef(2.0f, 0.0f, 0.0f);
+            // player.get_shape().move({-2.0, 0.0, 0.0});
+            player.get_velocity().x -= 100;
+        }
+        if (controller.is_key_pressed('d')) {
+            // glTranslatef(-2.0f, 0.0f, 0.0f);
+            // player.get_shape().move({2.0, 0.0, 0.0});
+            player.get_velocity().x += 100;
+        }
+        if (controller.is_key_pressed(' ')) {
             player.get_velocity().y += 100;
+        }
     }
+    
+    
     // std::cerr << player.get_collision() << "\n";
 
     if (controller.is_key_pressed('e')) {

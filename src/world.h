@@ -7,7 +7,6 @@
 namespace gm_engine {
     class Entity {
     public:
-        enum Collision {NONE, LEFT, RIGHT};
 
     private:
         Cube shape;
@@ -15,7 +14,7 @@ namespace gm_engine {
         Point<double> velocity;
         double mass;
         bool static_object;
-        Point<Collision> collision;
+        Point<Entity*> collision_left, collision_right;
 
     public:
         Entity();
@@ -32,7 +31,8 @@ namespace gm_engine {
         Point<double>& get_color();
         double& get_mass();
         bool& is_static();
-        Point<Collision>& get_collision();
+        Point<Entity*>& get_collision_from_left_side();
+        Point<Entity*>& get_collision_from_right_side();
 
         void render();
     };

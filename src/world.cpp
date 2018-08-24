@@ -14,7 +14,8 @@ namespace gm_engine {
         , velocity()
         , mass(1.0)
         , static_object(true)
-        , collision()
+        , collision_left()
+        , collision_right()
     {
     }
     Entity::Entity(const Cube& shape, const Point<double>& color, const Point<double>& velocity, const double mass, bool is_static)
@@ -23,7 +24,8 @@ namespace gm_engine {
         , velocity(velocity)
         , mass(mass)
         , static_object(is_static)
-        , collision()
+        , collision_left()
+        , collision_right()
     {
     }
 
@@ -42,8 +44,11 @@ namespace gm_engine {
     bool& Entity::is_static() {
         return static_object;
     }
-    Point<Entity::Collision>& Entity::get_collision() {
-        return collision;
+    Point<Entity*>& Entity::get_collision_from_left_side() {
+        return collision_left;
+    }
+    Point<Entity*>& Entity::get_collision_from_right_side() {
+        return collision_right;
     }
     
     inline void gl_set_point(const Point<double>& p) {
@@ -125,17 +130,18 @@ namespace gm_engine {
         }
     }
 
-    void set_collision(Entity::Collision& collision, double speed) {
+    Point<Entity*>& get_collision_side(Entity* entity, double speed) {
         if (speed > 0)
-            collision = Entity::RIGHT;
+            return entity->get_collision_from_right_side();
         else
-            collision = Entity::LEFT;
+            return entity->get_collision_from_left_side();
     }
 
     template <typename Func> 
     void World::process_physic_on_axis(double time, Func axis_getter) {
         for (int i = 0; i < entities.size(); ++i) {
-            axis_getter(entities[i]->get_collision()) = Entity::NONE;
+            axis_getter(entities[i]->get_collision_from_left_side()) = 0;
+            axis_getter(entities[i]->get_collision_from_right_side()) = 0;
 
             double old_velocity = axis_getter(entities[i]->get_velocity());
             entities[i]->get_shape().move(axis_getter(old_velocity * time));
@@ -164,7 +170,7 @@ namespace gm_engine {
                             axis_getter(entities[i]->get_velocity()) = axis_getter(entities[j]->get_velocity());
                             entities[i]->get_shape().move(axis_getter(axis_getter(entities[i]->get_velocity()) * time));
                             collide_with_static = true;
-                            set_collision(axis_getter(entities[i]->get_collision()), old_velocity);
+                            axis_getter(get_collision_side(entities[i], old_velocity)) = entities[j];
                             break;
                         }
                         intersections.push_back(entities[j]);
@@ -173,10 +179,9 @@ namespace gm_engine {
                 if (collide_with_static)
                     continue;
                 if (!intersections.empty()) {
-                    set_collision(axis_getter(entities[i]->get_collision()), old_velocity);
-                    Entity::Collision another_side = (axis_getter(entities[i]->get_collision()) == Entity::LEFT ? Entity::RIGHT : Entity::LEFT);
+                    axis_getter(get_collision_side(entities[i], old_velocity)) = intersections[0];  // FIXME: collision with not single object
                     for (Entity* entity : intersections) {
-                        axis_getter(entity->get_collision()) = another_side;
+                        axis_getter(get_collision_side(entities[i], -old_velocity)) = entities[i];
                     }
                     intersections.push_back(entities[i]);
                     entities[i]->get_shape().move(axis_getter(-old_velocity * time));
@@ -231,9 +236,10 @@ namespace gm_engine {
         process_physic_on_axis(time, a);
 
         for (auto entity : entities) {
-            if (entity->get_collision().y == gm_engine::Entity::LEFT) {
-                entity->get_velocity().x += sign(entity->get_velocity().x) * gravity_acceleration.y * 0.3 * time;
-                entity->get_velocity().z += sign(entity->get_velocity().z) * gravity_acceleration.y * 0.3 * time;
+            Entity* standing_on = entity->get_collision_from_left_side().y;
+            if (standing_on) {
+                entity->get_velocity().x += sign(entity->get_velocity().x - standing_on->get_velocity().x) * gravity_acceleration.y * 0.3 * time;
+                entity->get_velocity().z += sign(entity->get_velocity().z - standing_on->get_velocity().z) * gravity_acceleration.y * 0.3 * time;
             }
         }
     }
