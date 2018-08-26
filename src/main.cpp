@@ -89,7 +89,7 @@ void init() // Called before main loop to set up the program
     world.add_entity(&cube2);
     world.add_entity(&cube3);
     world.add_entity(&floor);
-    std::cout << player.get_shape().get_point(gm_engine::Cube::LEFT|gm_engine::Cube::BOTTOM|gm_engine::Cube::NEAR) << "\n";
+    //std::cout << player.get_shape().get_point(gm_engine::Cube::LEFT|gm_engine::Cube::BOTTOM|gm_engine::Cube::NEAR) << "\n";
 }
 
 // Called at the start of the program, after a glutPostRedisplay() and during idle

@@ -64,42 +64,42 @@ namespace gm_engine {
     void Entity::render() {
         gl_set_color(color * 0.4); 
         glBegin(GL_QUADS);
-        gl_set_point(shape.get_point(Cube::LEFT | Cube::BOTTOM | Cube::NEAR));
-        gl_set_point(shape.get_point(Cube::RIGHT | Cube::BOTTOM | Cube::NEAR));
-        gl_set_point(shape.get_point(Cube::RIGHT | Cube::TOP | Cube::NEAR));
-        gl_set_point(shape.get_point(Cube::LEFT | Cube::TOP | Cube::NEAR));
+        gl_set_point(shape.get_point(Options<Sides>().set(LEFT).set(BOTTOM).set(NEAR)));
+        gl_set_point(shape.get_point(Options<Sides>().set(RIGHT).set(BOTTOM).set(NEAR)));
+        gl_set_point(shape.get_point(Options<Sides>().set(RIGHT).set(TOP).set(NEAR)));
+        gl_set_point(shape.get_point(Options<Sides>().set(LEFT).set(TOP).set(NEAR)));
         glEnd();
 
         gl_set_color(color * 0.5); 
         glBegin(GL_QUADS);
-        gl_set_point(shape.get_point(Cube::LEFT | Cube::BOTTOM | Cube::NEAR));
-        gl_set_point(shape.get_point(Cube::LEFT | Cube::BOTTOM | Cube::FAR));
-        gl_set_point(shape.get_point(Cube::LEFT | Cube::TOP | Cube::FAR));
-        gl_set_point(shape.get_point(Cube::LEFT | Cube::TOP | Cube::NEAR));
+        gl_set_point(shape.get_point(Options<Sides>().set(LEFT).set(BOTTOM).set(NEAR)));
+        gl_set_point(shape.get_point(Options<Sides>().set(LEFT).set(BOTTOM).set(FAR)));
+        gl_set_point(shape.get_point(Options<Sides>().set(LEFT).set(TOP).set(FAR)));
+        gl_set_point(shape.get_point(Options<Sides>().set(LEFT).set(TOP).set(NEAR)));
         glEnd();
 
         gl_set_color(color * 0.5); 
         glBegin(GL_QUADS);
-        gl_set_point(shape.get_point(Cube::RIGHT | Cube::BOTTOM | Cube::NEAR));
-        gl_set_point(shape.get_point(Cube::RIGHT | Cube::BOTTOM | Cube::FAR));
-        gl_set_point(shape.get_point(Cube::RIGHT | Cube::TOP | Cube::FAR));
-        gl_set_point(shape.get_point(Cube::RIGHT | Cube::TOP | Cube::NEAR));
+        gl_set_point(shape.get_point(Options<Sides>().set(RIGHT).set(BOTTOM).set(NEAR)));
+        gl_set_point(shape.get_point(Options<Sides>().set(RIGHT).set(BOTTOM).set(FAR)));
+        gl_set_point(shape.get_point(Options<Sides>().set(RIGHT).set(TOP).set(FAR)));
+        gl_set_point(shape.get_point(Options<Sides>().set(RIGHT).set(TOP).set(NEAR)));
         glEnd();
 
         gl_set_color(color * 0.4); 
         glBegin(GL_QUADS);
-        gl_set_point(shape.get_point(Cube::LEFT | Cube::BOTTOM | Cube::FAR));
-        gl_set_point(shape.get_point(Cube::RIGHT | Cube::BOTTOM | Cube::FAR));
-        gl_set_point(shape.get_point(Cube::RIGHT | Cube::TOP | Cube::FAR));
-        gl_set_point(shape.get_point(Cube::LEFT | Cube::TOP | Cube::FAR));
+        gl_set_point(shape.get_point(Options<Sides>().set(LEFT).set(BOTTOM).set(FAR)));
+        gl_set_point(shape.get_point(Options<Sides>().set(RIGHT).set(BOTTOM).set(FAR)));
+        gl_set_point(shape.get_point(Options<Sides>().set(RIGHT).set(TOP).set(FAR)));
+        gl_set_point(shape.get_point(Options<Sides>().set(LEFT).set(TOP).set(FAR)));
         glEnd();
 
         gl_set_color(color); 
         glBegin(GL_QUADS);
-        gl_set_point(shape.get_point(Cube::LEFT | Cube::TOP | Cube::NEAR));
-        gl_set_point(shape.get_point(Cube::RIGHT | Cube::TOP | Cube::NEAR));
-        gl_set_point(shape.get_point(Cube::RIGHT | Cube::TOP | Cube::FAR));
-        gl_set_point(shape.get_point(Cube::LEFT | Cube::TOP | Cube::FAR));
+        gl_set_point(shape.get_point(Options<Sides>().set(LEFT).set(TOP).set(NEAR)));
+        gl_set_point(shape.get_point(Options<Sides>().set(RIGHT).set(TOP).set(NEAR)));
+        gl_set_point(shape.get_point(Options<Sides>().set(RIGHT).set(TOP).set(FAR)));
+        gl_set_point(shape.get_point(Options<Sides>().set(LEFT).set(TOP).set(FAR)));
         glEnd();
     }
     Entity* intersect_with_entities(std::vector<Entity*>& entities, Entity* checking_entity) {

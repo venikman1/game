@@ -3,12 +3,6 @@
 #include <algorithm>
 
 namespace gm_engine {
-    const unsigned int Cube::LEFT = 0;
-    const unsigned int Cube::RIGHT = 0b1;
-    const unsigned int Cube::BOTTOM = 0;
-    const unsigned int Cube::TOP = 0b10;
-    const unsigned int Cube::NEAR = 0;
-    const unsigned int Cube::FAR = 0b100;
 
     Cube::Cube(const Point<double>& near_point, const Point<double>& size)
         : near_point(near_point)
@@ -19,14 +13,14 @@ namespace gm_engine {
     const double& (*min)(const double&, const double&) = &std::min<double>;
     bool Cube::is_intersect(const Cube& other_cube) const {
         Point<double> near_boundary = map_points(
-            get_point(LEFT | BOTTOM | NEAR),
-            other_cube.get_point(LEFT | BOTTOM | NEAR),
+            get_point(Options<Sides>().set(LEFT).set(BOTTOM).set(NEAR)),
+            other_cube.get_point(Options<Sides>().set(LEFT).set(BOTTOM).set(NEAR)),
             [](double a, double b) {return std::max(a, b);}
         );
 
         Point<double> far_boundary = map_points(
-            get_point(RIGHT | TOP | FAR),
-            other_cube.get_point(RIGHT | TOP | FAR),
+            get_point(Options<Sides>().set(RIGHT).set(TOP).set(FAR)),
+            other_cube.get_point(Options<Sides>().set(RIGHT).set(TOP).set(FAR)),
             [](double a, double b) {return std::min(a, b);}  // WTF IS IT BOYS????????????????
         );
         
@@ -37,11 +31,11 @@ namespace gm_engine {
         );
     }
 
-    Point<double> Cube::get_point(unsigned int which) const {
+    Point<double> Cube::get_point(Options<Sides> which) const {
         Point<double> result;
-        result.x = (which & RIGHT) ? near_point.x + size.x:  near_point.x;
-        result.y = (which & TOP) ? near_point.y + size.y : near_point.y;
-        result.z = (which & FAR) ?  near_point.z + size.z : near_point.z;
+        result.x = (which.is_set(RIGHT)) ? near_point.x + size.x:  near_point.x;
+        result.y = (which.is_set(TOP)) ? near_point.y + size.y : near_point.y;
+        result.z = (which.is_set(FAR)) ?  near_point.z + size.z : near_point.z;
         return result;
     }
 

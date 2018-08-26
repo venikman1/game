@@ -1,9 +1,15 @@
 #pragma once
 
 #include <iostream>
+#include "utils.h"
 
 namespace gm_engine {
     const double EPS = 1e-6;
+
+    enum Sides 
+    {
+        LEFT, RIGHT, BOTTOM, TOP, NEAR, FAR
+    };
 
     template<typename T>
     class Point
@@ -30,12 +36,10 @@ namespace gm_engine {
         Point<double> size;
     
     public:
-        static const unsigned int LEFT, RIGHT, BOTTOM, TOP, NEAR, FAR;
-
         Cube(const Point<double>& near_point, const Point<double>& size);
 
         bool is_intersect(const Cube& other_cube) const;
-        Point<double> get_point(unsigned int which) const;
+        Point<double> get_point(Options<Sides> which) const;
         Point<double>& get_size();
 
         void move_to(const Point<double>& position);
