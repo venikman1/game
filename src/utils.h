@@ -14,9 +14,9 @@ namespace gm_engine {
         unsigned int options;
     public:
         Options<T>();
-        Options<T> set(const T &option);
-        Options<T> unset(const T &option);
-        bool is_set(const T &option);
+        Options<T>& set(const T &option);
+        Options<T>& unset(const T &option);
+        bool is_set(const T &option) const;
     };
 
     template<typename T>
@@ -26,20 +26,20 @@ namespace gm_engine {
     }
 
     template<typename T>
-    Options<T> Options<T>::set(const T &option)
+    Options<T>& Options<T>::set(const T &option)
     {
         options |= 1 << option;
         return *this;
     }
 
     template<typename T>
-    bool Options<T>::is_set(const T &option)
+    bool Options<T>::is_set(const T &option) const
     {
         return ((options >> option) & 1) == 1;
     }
 
     template<typename T>
-    Options<T> Options<T>::unset(const T &option)
+    Options<T>& Options<T>::unset(const T &option)
     {
         if (is_set(option))
         {

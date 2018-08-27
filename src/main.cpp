@@ -52,7 +52,7 @@ gm_engine::Entity cube3(
     1.0,
     true
 );
-gm_engine::Entity floor(
+gm_engine::Entity ground(
     gm_engine::Cube(
         {-200.0, -30.0, 0.0},
         {700.0, 10.0, 700.0}
@@ -88,7 +88,7 @@ void init() // Called before main loop to set up the program
     world.add_entity(&cube);
     world.add_entity(&cube2);
     world.add_entity(&cube3);
-    world.add_entity(&floor);
+    world.add_entity(&ground);
     //std::cout << player.get_shape().get_point(gm_engine::Cube::LEFT|gm_engine::Cube::BOTTOM|gm_engine::Cube::NEAR) << "\n";
 }
 
@@ -187,32 +187,45 @@ void display()
 
     gm_engine::Entity* standing_on = player.get_collision_from_left_side().y;
     if (standing_on) {
-        player.get_velocity().x = standing_on->get_velocity().x;
-        player.get_velocity().z = standing_on->get_velocity().z;
+        // player.get_velocity().x = standing_on->get_velocity().x;
+        // player.get_velocity().z = standing_on->get_velocity().z;
 
-        if (controller.is_key_pressed('w')) {
-            // glTranslatef(0.0f, 0.0f, -2.0f);
-            // player.get_shape().move({0.0, 0.0, 2.0});
-            player.get_velocity().z += 100;
-        }
-        if (controller.is_key_pressed('s')) {
-            // glTranslatef(0.0f, 0.0f, 2.0f);
-            // player.get_shape().move({0.0, 0.0, -2.0});
-            player.get_velocity().z -= 100;
-        }
-        if (controller.is_key_pressed('a')) {
-            // glTranslatef(2.0f, 0.0f, 0.0f);
-            // player.get_shape().move({-2.0, 0.0, 0.0});
-            player.get_velocity().x -= 100;
-        }
-        if (controller.is_key_pressed('d')) {
-            // glTranslatef(-2.0f, 0.0f, 0.0f);
-            // player.get_shape().move({2.0, 0.0, 0.0});
-            player.get_velocity().x += 100;
-        }
+        // if (controller.is_key_pressed('w')) {
+        //     // glTranslatef(0.0f, 0.0f, -2.0f);
+        //     // player.get_shape().move({0.0, 0.0, 2.0});
+        //     player.get_velocity().z += 100;
+        // }
+        // if (controller.is_key_pressed('s')) {
+        //     // glTranslatef(0.0f, 0.0f, 2.0f);
+        //     // player.get_shape().move({0.0, 0.0, -2.0});
+        //     player.get_velocity().z -= 100;
+        // }
+        // if (controller.is_key_pressed('a')) {
+        //     // glTranslatef(2.0f, 0.0f, 0.0f);
+        //     // player.get_shape().move({-2.0, 0.0, 0.0});
+        //     player.get_velocity().x -= 100;
+        // }
+        // if (controller.is_key_pressed('d')) {
+        //     // glTranslatef(-2.0f, 0.0f, 0.0f);
+        //     // player.get_shape().move({2.0, 0.0, 0.0});
+        //     player.get_velocity().x += 100;
+        // }
         if (controller.is_key_pressed(' ')) {
             player.get_velocity().y += 100;
         }
+    }
+    player.get_move_velocity().z = player.get_move_velocity().x = 0;
+    if (controller.is_key_pressed('w')) {
+        player.get_move_velocity().z = 100;
+    }
+    if (controller.is_key_pressed('s')) {
+        player.get_move_velocity().z = -100;
+    }
+    if (controller.is_key_pressed('a')) {
+        player.get_move_velocity().x = -100;
+    }
+    if (controller.is_key_pressed('d')) {
+        player.get_move_velocity().x = 100;
     }
     
     

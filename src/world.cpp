@@ -16,6 +16,7 @@ namespace gm_engine {
         , static_object(true)
         , collision_left()
         , collision_right()
+        , move_velocity()
     {
     }
     Entity::Entity(const Cube& shape, const Point<double>& color, const Point<double>& velocity, const double mass, bool is_static)
@@ -26,6 +27,7 @@ namespace gm_engine {
         , static_object(is_static)
         , collision_left()
         , collision_right()
+        , move_velocity()
     {
     }
 
@@ -34,6 +36,9 @@ namespace gm_engine {
     }
     Point<double>& Entity::get_velocity() {
         return velocity;
+    }
+    Point<double>& Entity::get_move_velocity() {
+        return move_velocity;
     }
     Point<double>& Entity::get_color() {
         return color;
@@ -64,42 +69,42 @@ namespace gm_engine {
     void Entity::render() {
         gl_set_color(color * 0.4); 
         glBegin(GL_QUADS);
-        gl_set_point(shape.get_point(Options<Sides>().set(LEFT).set(BOTTOM).set(NEAR)));
-        gl_set_point(shape.get_point(Options<Sides>().set(RIGHT).set(BOTTOM).set(NEAR)));
-        gl_set_point(shape.get_point(Options<Sides>().set(RIGHT).set(TOP).set(NEAR)));
-        gl_set_point(shape.get_point(Options<Sides>().set(LEFT).set(TOP).set(NEAR)));
+        gl_set_point(shape.get_point(Options<Sides>().set(Sides::Left).set(Sides::Bottom).set(Sides::Near)));
+        gl_set_point(shape.get_point(Options<Sides>().set(Sides::Right).set(Sides::Bottom).set(Sides::Near)));
+        gl_set_point(shape.get_point(Options<Sides>().set(Sides::Right).set(Sides::Top).set(Sides::Near)));
+        gl_set_point(shape.get_point(Options<Sides>().set(Sides::Left).set(Sides::Top).set(Sides::Near)));
         glEnd();
 
         gl_set_color(color * 0.5); 
         glBegin(GL_QUADS);
-        gl_set_point(shape.get_point(Options<Sides>().set(LEFT).set(BOTTOM).set(NEAR)));
-        gl_set_point(shape.get_point(Options<Sides>().set(LEFT).set(BOTTOM).set(FAR)));
-        gl_set_point(shape.get_point(Options<Sides>().set(LEFT).set(TOP).set(FAR)));
-        gl_set_point(shape.get_point(Options<Sides>().set(LEFT).set(TOP).set(NEAR)));
+        gl_set_point(shape.get_point(Options<Sides>().set(Sides::Left).set(Sides::Bottom).set(Sides::Near)));
+        gl_set_point(shape.get_point(Options<Sides>().set(Sides::Left).set(Sides::Bottom).set(Sides::Far)));
+        gl_set_point(shape.get_point(Options<Sides>().set(Sides::Left).set(Sides::Top).set(Sides::Far)));
+        gl_set_point(shape.get_point(Options<Sides>().set(Sides::Left).set(Sides::Top).set(Sides::Near)));
         glEnd();
 
         gl_set_color(color * 0.5); 
         glBegin(GL_QUADS);
-        gl_set_point(shape.get_point(Options<Sides>().set(RIGHT).set(BOTTOM).set(NEAR)));
-        gl_set_point(shape.get_point(Options<Sides>().set(RIGHT).set(BOTTOM).set(FAR)));
-        gl_set_point(shape.get_point(Options<Sides>().set(RIGHT).set(TOP).set(FAR)));
-        gl_set_point(shape.get_point(Options<Sides>().set(RIGHT).set(TOP).set(NEAR)));
+        gl_set_point(shape.get_point(Options<Sides>().set(Sides::Right).set(Sides::Bottom).set(Sides::Near)));
+        gl_set_point(shape.get_point(Options<Sides>().set(Sides::Right).set(Sides::Bottom).set(Sides::Far)));
+        gl_set_point(shape.get_point(Options<Sides>().set(Sides::Right).set(Sides::Top).set(Sides::Far)));
+        gl_set_point(shape.get_point(Options<Sides>().set(Sides::Right).set(Sides::Top).set(Sides::Near)));
         glEnd();
 
         gl_set_color(color * 0.4); 
         glBegin(GL_QUADS);
-        gl_set_point(shape.get_point(Options<Sides>().set(LEFT).set(BOTTOM).set(FAR)));
-        gl_set_point(shape.get_point(Options<Sides>().set(RIGHT).set(BOTTOM).set(FAR)));
-        gl_set_point(shape.get_point(Options<Sides>().set(RIGHT).set(TOP).set(FAR)));
-        gl_set_point(shape.get_point(Options<Sides>().set(LEFT).set(TOP).set(FAR)));
+        gl_set_point(shape.get_point(Options<Sides>().set(Sides::Left).set(Sides::Bottom).set(Sides::Far)));
+        gl_set_point(shape.get_point(Options<Sides>().set(Sides::Right).set(Sides::Bottom).set(Sides::Far)));
+        gl_set_point(shape.get_point(Options<Sides>().set(Sides::Right).set(Sides::Top).set(Sides::Far)));
+        gl_set_point(shape.get_point(Options<Sides>().set(Sides::Left).set(Sides::Top).set(Sides::Far)));
         glEnd();
 
         gl_set_color(color); 
         glBegin(GL_QUADS);
-        gl_set_point(shape.get_point(Options<Sides>().set(LEFT).set(TOP).set(NEAR)));
-        gl_set_point(shape.get_point(Options<Sides>().set(RIGHT).set(TOP).set(NEAR)));
-        gl_set_point(shape.get_point(Options<Sides>().set(RIGHT).set(TOP).set(FAR)));
-        gl_set_point(shape.get_point(Options<Sides>().set(LEFT).set(TOP).set(FAR)));
+        gl_set_point(shape.get_point(Options<Sides>().set(Sides::Left).set(Sides::Top).set(Sides::Near)));
+        gl_set_point(shape.get_point(Options<Sides>().set(Sides::Right).set(Sides::Top).set(Sides::Near)));
+        gl_set_point(shape.get_point(Options<Sides>().set(Sides::Right).set(Sides::Top).set(Sides::Far)));
+        gl_set_point(shape.get_point(Options<Sides>().set(Sides::Left).set(Sides::Top).set(Sides::Far)));
         glEnd();
     }
     Entity* intersect_with_entities(std::vector<Entity*>& entities, Entity* checking_entity) {
@@ -235,11 +240,29 @@ namespace gm_engine {
         a.mode = AxisGetter::Z;
         process_physic_on_axis(time, a);
 
+        // std::cerr << "Relative speed is " << entities[0]->get_velocity() - entities[0]->get_move_velocity() - entities[0]->->get_velocity() << "\n";
+        std::cerr << "Speed is " << entities[0]->get_velocity() << "\n";
+
         for (auto entity : entities) {
             Entity* standing_on = entity->get_collision_from_left_side().y;
             if (standing_on) {
-                entity->get_velocity().x += sign(entity->get_velocity().x - standing_on->get_velocity().x) * gravity_acceleration.y * 0.3 * time;
-                entity->get_velocity().z += sign(entity->get_velocity().z - standing_on->get_velocity().z) * gravity_acceleration.y * 0.3 * time;
+                Point<double> relative_speed = entity->get_velocity() - entity->get_move_velocity() - standing_on->get_velocity();
+                double max_friction_accel = std::fabs(gravity_acceleration.y) * 10.0;
+                double max_friction_vel_change = max_friction_accel * time;
+                
+                if (std::fabs(relative_speed.x) < max_friction_vel_change) {
+                    entity->get_velocity().x -= relative_speed.x;
+                }
+                else {
+                    entity->get_velocity().x -= sign(relative_speed.x) * max_friction_vel_change;
+                }
+
+                if (std::fabs(relative_speed.z) < max_friction_vel_change) {
+                    entity->get_velocity().z -= relative_speed.z;
+                }
+                else {
+                    entity->get_velocity().z -= sign(relative_speed.z) * max_friction_vel_change;
+                }
             }
         }
     }
