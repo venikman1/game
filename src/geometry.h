@@ -1,6 +1,7 @@
 #pragma once
 
 #include <iostream>
+#include <cmath>
 #include "utils.h"
 
 namespace gm_engine {
@@ -39,7 +40,7 @@ namespace gm_engine {
         Cube(const Point<double>& near_point, const Point<double>& size);
 
         bool is_intersect(const Cube& other_cube) const;
-        Point<double> get_point(Options<Sides> which) const;
+        Point<double> get_point(const Options<Sides>& which) const;
         Point<double>& get_size();
 
         void move_to(const Point<double>& position);

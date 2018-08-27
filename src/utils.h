@@ -19,7 +19,7 @@ namespace gm_engine {
         Options<T>(const T &option, const Args &...other);
         Options<T>& set(const T &option);
         Options<T>& unset(const T &option);
-        bool is_set(const T &option);
+        bool is_set(const T &option) const;
     };
 
     template<typename T>
@@ -50,7 +50,7 @@ namespace gm_engine {
     }
 
     template<typename T>
-    bool Options<T>::is_set(const T &option)
+    bool Options<T>::is_set(const T &option) const
     {
         return ((options >> option) & 1) == 1;
     }

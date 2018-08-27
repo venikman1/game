@@ -35,6 +35,9 @@
 *.out
 *.app
 
+# VsCode
+*/.vscode/*
+
 ### CMake ###
 CMakeCache.txt
 CMakeFiles

@@ -11,7 +11,7 @@ namespace gm_engine {
     private:
         Cube shape;
         Point<double> color;
-        Point<double> velocity;
+        Point<double> velocity, move_velocity;
         double mass;
         bool static_object;
         Point<Entity*> collision_left, collision_right;
@@ -28,6 +28,7 @@ namespace gm_engine {
 
         Cube& get_shape();
         Point<double>& get_velocity();
+        Point<double>& get_move_velocity();
         Point<double>& get_color();
         double& get_mass();
         bool& is_static();
