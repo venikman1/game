@@ -8,7 +8,7 @@ namespace gm_engine {
 
     enum Sides 
     {
-        LEFT, RIGHT, BOTTOM, TOP, NEAR, FAR
+        Left, Right, Bottom, Top, Near, Far
     };
 
     template<typename T>
