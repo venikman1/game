@@ -13,12 +13,12 @@ namespace gm_engine {
     private:
         unsigned int options;
     public:
-        Options<T>();
-        Options<T>(const T &option);
+        Options();
+        Options(const T &option);
         template<typename ...Args>
-        Options<T>(const T &option, const Args &...other);
-        Options<T>& set(const T &option);
-        Options<T>& unset(const T &option);
+        Options(const T &option, const Args &...other);
+        Options& set(const T &option);
+        Options& unset(const T &option);
         bool is_set(const T &option) const;
     };
 
