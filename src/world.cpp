@@ -81,42 +81,42 @@ namespace gm_engine {
     void Entity::render() {
         gl_set_color(color * 0.4); 
         glBegin(GL_QUADS);
-        gl_set_point(shape.get_point(Options<Sides>().set(Sides::Left).set(Sides::Bottom).set(Sides::Near)));
-        gl_set_point(shape.get_point(Options<Sides>().set(Sides::Right).set(Sides::Bottom).set(Sides::Near)));
-        gl_set_point(shape.get_point(Options<Sides>().set(Sides::Right).set(Sides::Top).set(Sides::Near)));
-        gl_set_point(shape.get_point(Options<Sides>().set(Sides::Left).set(Sides::Top).set(Sides::Near)));
+        gl_set_point(shape.get_point(Options<Sides>().set(Left).set(Bottom).set(Near)));
+        gl_set_point(shape.get_point(Options<Sides>().set(Right).set(Bottom).set(Near)));
+        gl_set_point(shape.get_point(Options<Sides>().set(Right).set(Top).set(Near)));
+        gl_set_point(shape.get_point(Options<Sides>().set(Left).set(Top).set(Near)));
         glEnd();
 
         gl_set_color(color * 0.5); 
         glBegin(GL_QUADS);
-        gl_set_point(shape.get_point(Options<Sides>().set(Sides::Left).set(Sides::Bottom).set(Sides::Near)));
-        gl_set_point(shape.get_point(Options<Sides>().set(Sides::Left).set(Sides::Bottom).set(Sides::Far)));
-        gl_set_point(shape.get_point(Options<Sides>().set(Sides::Left).set(Sides::Top).set(Sides::Far)));
-        gl_set_point(shape.get_point(Options<Sides>().set(Sides::Left).set(Sides::Top).set(Sides::Near)));
+        gl_set_point(shape.get_point(Options<Sides>().set(Left).set(Bottom).set(Near)));
+        gl_set_point(shape.get_point(Options<Sides>().set(Left).set(Bottom).set(Far)));
+        gl_set_point(shape.get_point(Options<Sides>().set(Left).set(Top).set(Far)));
+        gl_set_point(shape.get_point(Options<Sides>().set(Left).set(Top).set(Near)));
         glEnd();
 
         gl_set_color(color * 0.5); 
         glBegin(GL_QUADS);
-        gl_set_point(shape.get_point(Options<Sides>().set(Sides::Right).set(Sides::Bottom).set(Sides::Near)));
-        gl_set_point(shape.get_point(Options<Sides>().set(Sides::Right).set(Sides::Bottom).set(Sides::Far)));
-        gl_set_point(shape.get_point(Options<Sides>().set(Sides::Right).set(Sides::Top).set(Sides::Far)));
-        gl_set_point(shape.get_point(Options<Sides>().set(Sides::Right).set(Sides::Top).set(Sides::Near)));
+        gl_set_point(shape.get_point(Options<Sides>().set(Right).set(Bottom).set(Near)));
+        gl_set_point(shape.get_point(Options<Sides>().set(Right).set(Bottom).set(Far)));
+        gl_set_point(shape.get_point(Options<Sides>().set(Right).set(Top).set(Far)));
+        gl_set_point(shape.get_point(Options<Sides>().set(Right).set(Top).set(Near)));
         glEnd();
 
         gl_set_color(color * 0.4); 
         glBegin(GL_QUADS);
-        gl_set_point(shape.get_point(Options<Sides>().set(Sides::Left).set(Sides::Bottom).set(Sides::Far)));
-        gl_set_point(shape.get_point(Options<Sides>().set(Sides::Right).set(Sides::Bottom).set(Sides::Far)));
-        gl_set_point(shape.get_point(Options<Sides>().set(Sides::Right).set(Sides::Top).set(Sides::Far)));
-        gl_set_point(shape.get_point(Options<Sides>().set(Sides::Left).set(Sides::Top).set(Sides::Far)));
+        gl_set_point(shape.get_point(Options<Sides>().set(Left).set(Bottom).set(Far)));
+        gl_set_point(shape.get_point(Options<Sides>().set(Right).set(Bottom).set(Far)));
+        gl_set_point(shape.get_point(Options<Sides>().set(Right).set(Top).set(Far)));
+        gl_set_point(shape.get_point(Options<Sides>().set(Left).set(Top).set(Far)));
         glEnd();
 
         gl_set_color(color); 
         glBegin(GL_QUADS);
-        gl_set_point(shape.get_point(Options<Sides>().set(Sides::Left).set(Sides::Top).set(Sides::Near)));
-        gl_set_point(shape.get_point(Options<Sides>().set(Sides::Right).set(Sides::Top).set(Sides::Near)));
-        gl_set_point(shape.get_point(Options<Sides>().set(Sides::Right).set(Sides::Top).set(Sides::Far)));
-        gl_set_point(shape.get_point(Options<Sides>().set(Sides::Left).set(Sides::Top).set(Sides::Far)));
+        gl_set_point(shape.get_point(Options<Sides>().set(Left).set(Top).set(Near)));
+        gl_set_point(shape.get_point(Options<Sides>().set(Right).set(Top).set(Near)));
+        gl_set_point(shape.get_point(Options<Sides>().set(Right).set(Top).set(Far)));
+        gl_set_point(shape.get_point(Options<Sides>().set(Left).set(Top).set(Far)));
         glEnd();
     }
     Entity* intersect_with_entities(std::vector<Entity*>& entities, Entity* checking_entity) {
