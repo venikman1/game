@@ -42,6 +42,9 @@ namespace gm_engine {
     Point<double>& Cube::get_size() {
         return size;
     }
+    Point<double>& Cube::get_position() {
+        return near_point;
+    }
 
     void Cube::move_to(const Point<double>& position) {
         near_point = position;

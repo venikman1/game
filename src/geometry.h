@@ -42,6 +42,7 @@ namespace gm_engine {
         bool is_intersect(const Cube& other_cube) const;
         Point<double> get_point(const Options<Sides>& which) const;
         Point<double>& get_size();
+        Point<double>& get_position();
 
         void move_to(const Point<double>& position);
         void move(const Point<double>& position_change);

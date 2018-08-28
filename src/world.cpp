@@ -17,9 +17,17 @@ namespace gm_engine {
         , collision_left()
         , collision_right()
         , move_velocity()
+        , friction(0.3)
     {
     }
-    Entity::Entity(const Cube& shape, const Point<double>& color, const Point<double>& velocity, const double mass, bool is_static)
+    Entity::Entity(
+        const Cube& shape,
+        const Point<double>& color,
+        const Point<double>& velocity,
+        const double mass,
+        bool is_static,
+        const double friction
+    )
         : shape(shape)
         , color(color)
         , velocity(velocity)
@@ -28,6 +36,7 @@ namespace gm_engine {
         , collision_left()
         , collision_right()
         , move_velocity()
+        , friction(friction)
     {
     }
 
@@ -45,6 +54,9 @@ namespace gm_engine {
     }
     double& Entity::get_mass() {
         return mass;
+    }
+    double& Entity::get_friction() {
+        return friction;
     }
     bool& Entity::is_static() {
         return static_object;
@@ -173,10 +185,9 @@ namespace gm_engine {
                         if (entities[j]->is_static()) {
                             entities[i]->get_shape().move(axis_getter(-old_velocity * time));
                             axis_getter(entities[i]->get_velocity()) = axis_getter(entities[j]->get_velocity());
-                            entities[i]->get_shape().move(axis_getter(axis_getter(entities[i]->get_velocity()) * time));
+                            // entities[i]->get_shape().move(axis_getter(axis_getter(entities[i]->get_velocity()) * time));
                             collide_with_static = true;
                             axis_getter(get_collision_side(entities[i], old_velocity)) = entities[j];
-                            break;
                         }
                         intersections.push_back(entities[j]);
                     }
@@ -184,12 +195,42 @@ namespace gm_engine {
                 if (collide_with_static)
                     continue;
                 if (!intersections.empty()) {
+                    // std::vector<double> colls;
+                    // for (Entity* entity : intersections) {
+                    //     Options<Sides> side = (old_velocity > 0
+                    //         ? Options<Sides>().set(Sides::Left).set(Sides::Bottom).set(Sides::Near)
+                    //         : Options<Sides>().set(Sides::Right).set(Sides::Top).set(Sides::Far)
+                    //     );
+
+                    //     colls.push_back(
+                    //         axis_getter(entity->get_shape().get_point(side)) + 
+                    //         (side.is_set(Sides::Left) ? -EPS : EPS)
+                    //     );
+                    // }
+                    // double nearest_coll = colls[0];
+                    // for (double e : colls) {
+                    //     if (old_velocity > 0 && e < nearest_coll)
+                    //         nearest_coll = e;
+                    //     else if (old_velocity < 0 && e > nearest_coll)
+                    //         nearest_coll = e;
+                    // }
+                    // axis_getter(entities[i]->get_shape().get_position()) = nearest_coll; // FIXME: I am not working
+
                     axis_getter(get_collision_side(entities[i], old_velocity)) = intersections[0];  // FIXME: collision with not single object
                     for (Entity* entity : intersections) {
                         axis_getter(get_collision_side(entities[i], -old_velocity)) = entities[i];
                     }
                     intersections.push_back(entities[i]);
                     entities[i]->get_shape().move(axis_getter(-old_velocity * time));
+
+                    // double vel_step = old_velocity / 2;
+                    // while (std::fabs(vel_step) > EPS) {
+                    //     entities[i]->get_shape().move(axis_getter(vel_step * time));
+                    //     if (intersect_with_entities(entities, entities[i]))
+                    //         entities[i]->get_shape().move(axis_getter(-vel_step * time));
+                    //     vel_step /= 2;
+                    // }  // FIXME: This doesn't fix problem
+
                     double impulse = 0;
                     double sum_mass = 0;
                     for (Entity* entity : intersections) {
@@ -211,7 +252,7 @@ namespace gm_engine {
         Mode mode;
 
         template <typename T>
-        T& operator()(Point<T>& point) {
+        T operator()(const Point<T>& point) const {
             switch(mode) {
                 case X: return point.x;
                 case Y: return point.y;
@@ -220,7 +261,16 @@ namespace gm_engine {
         }
 
         template <typename T>
-        Point<T> operator()(const T& k) {
+        T& operator()(Point<T>& point) const {
+            switch(mode) {
+                case X: return point.x;
+                case Y: return point.y;
+                case Z: return point.z;
+            }
+        }
+
+        template <typename T>
+        Point<T> operator()(const T& k) const {
             Point<T> result;
             switch(mode) {
                 case X: result.x = k; break;
@@ -240,14 +290,14 @@ namespace gm_engine {
         a.mode = AxisGetter::Z;
         process_physic_on_axis(time, a);
 
-        // std::cerr << "Relative speed is " << entities[0]->get_velocity() - entities[0]->get_move_velocity() - entities[0]->->get_velocity() << "\n";
-        std::cerr << "Speed is " << entities[0]->get_velocity() << "\n";
-
         for (auto entity : entities) {
+            if (entity->is_static())
+                continue;
             Entity* standing_on = entity->get_collision_from_left_side().y;
             if (standing_on) {
                 Point<double> relative_speed = entity->get_velocity() - entity->get_move_velocity() - standing_on->get_velocity();
-                double max_friction_accel = std::fabs(gravity_acceleration.y) * 10.0;
+                double friction = entity->get_friction() + standing_on->get_friction();
+                double max_friction_accel = std::fabs(gravity_acceleration.y) * friction;
                 double max_friction_vel_change = max_friction_accel * time;
                 
                 if (std::fabs(relative_speed.x) < max_friction_vel_change) {
@@ -263,6 +313,13 @@ namespace gm_engine {
                 else {
                     entity->get_velocity().z -= sign(relative_speed.z) * max_friction_vel_change;
                 }
+            }
+            else {
+                Point<double> relative_speed = entity->get_velocity() - entity->get_move_velocity();
+                relative_speed.y = 0.0;
+                double friction = 5.0;
+
+                entity->get_velocity() -= relative_speed * friction * time / entity->get_mass();
             }
         }
     }

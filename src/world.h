@@ -13,6 +13,7 @@ namespace gm_engine {
         Point<double> color;
         Point<double> velocity, move_velocity;
         double mass;
+        double friction;
         bool static_object;
         Point<Entity*> collision_left, collision_right;
 
@@ -23,7 +24,8 @@ namespace gm_engine {
             const Point<double>& color = Point<double>(0.7, 0.7, 0.7),
             const Point<double>& velocity = Point<double>(0.0, 0.0, 0.0),
             const double mass = 1,
-            bool is_static = false
+            bool is_static = false,
+            const double friction = 0.3
         );
 
         Cube& get_shape();
@@ -31,6 +33,7 @@ namespace gm_engine {
         Point<double>& get_move_velocity();
         Point<double>& get_color();
         double& get_mass();
+        double& get_friction();
         bool& is_static();
         Point<Entity*>& get_collision_from_left_side();
         Point<Entity*>& get_collision_from_right_side();

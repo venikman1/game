@@ -19,13 +19,14 @@ gm_engine::Entity player(
     ),
     {0.7, 0.7, 0.7},
     {0.0, 0.0, 0.0},
-    1.0,
-    false
+    10.0,
+    false,
+    10.0
 );
 gm_engine::Entity cube(
     gm_engine::Cube(
         {-100.0, 0.0, 100.0},
-        {20.0, 40.0, 20.0}
+        {20.0, 30.0, 20.0}
     ),
     {0.4, 0.4, 0.7},
     {0.0, 0.0, 0.0},
@@ -35,7 +36,7 @@ gm_engine::Entity cube(
 gm_engine::Entity cube2(
     gm_engine::Cube(
         {-200.0, 0.0, 100.0},
-        {20.0, 40.0, 20.0}
+        {20.0, 30.0, 20.0}
     ),
     {0.4, 0.4, 0.7},
     {100.0, 0.0, 0.0},
@@ -60,7 +61,8 @@ gm_engine::Entity ground(
     {0.9, 0.9, 0.9},
     {0.0, 0.0, 0.0},
     1.0,
-    true
+    true,
+    0.0
 );
 gm_engine::World world;
 gm_engine::Controller controller;
