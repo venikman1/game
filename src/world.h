@@ -3,6 +3,7 @@
 #include <vector>
 
 #include "geometry.h"
+#include "graphics.h"
 
 namespace gm_engine {
     class Entity {
@@ -39,6 +40,8 @@ namespace gm_engine {
         Point<Entity*>& get_collision_from_right_side();
 
         void render();
+
+        Texture* used_texture = 0;
     };
 
     class World {

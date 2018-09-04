@@ -76,44 +76,105 @@ namespace gm_engine {
     }
 
     void Entity::render() {
-        gl_set_color(color * 0.4); 
-        glBegin(GL_QUADS);
-        gl_set_point(shape.get_point(Options<Sides>().set(Left).set(Bottom).set(Near)));
-        gl_set_point(shape.get_point(Options<Sides>().set(Right).set(Bottom).set(Near)));
-        gl_set_point(shape.get_point(Options<Sides>().set(Right).set(Top).set(Near)));
-        gl_set_point(shape.get_point(Options<Sides>().set(Left).set(Top).set(Near)));
-        glEnd();
+        if (used_texture) {
+            glEnable(GL_TEXTURE_2D);
+            glBindTexture(GL_TEXTURE_2D, used_texture->get_texture());
 
-        gl_set_color(color * 0.5); 
-        glBegin(GL_QUADS);
-        gl_set_point(shape.get_point(Options<Sides>().set(Left).set(Bottom).set(Near)));
-        gl_set_point(shape.get_point(Options<Sides>().set(Left).set(Bottom).set(Far)));
-        gl_set_point(shape.get_point(Options<Sides>().set(Left).set(Top).set(Far)));
-        gl_set_point(shape.get_point(Options<Sides>().set(Left).set(Top).set(Near)));
-        glEnd();
+            gl_set_color({0.4, 0.4, 0.4}); 
+            glBegin(GL_QUADS);
+            used_texture->uv_map_point(Options<Sides>(Left, Bottom), shape.get_size().x, shape.get_size().y);
+            gl_set_point(shape.get_point(Options<Sides>().set(Left).set(Bottom).set(Near)));
+            used_texture->uv_map_point(Options<Sides>(Right, Bottom), shape.get_size().x, shape.get_size().y);
+            gl_set_point(shape.get_point(Options<Sides>().set(Right).set(Bottom).set(Near)));
+            used_texture->uv_map_point(Options<Sides>(Right, Top), shape.get_size().x, shape.get_size().y);
+            gl_set_point(shape.get_point(Options<Sides>().set(Right).set(Top).set(Near)));
+            used_texture->uv_map_point(Options<Sides>(Left, Top), shape.get_size().x, shape.get_size().y);
+            gl_set_point(shape.get_point(Options<Sides>().set(Left).set(Top).set(Near)));
+            glEnd();
 
-        gl_set_color(color * 0.5); 
-        glBegin(GL_QUADS);
-        gl_set_point(shape.get_point(Options<Sides>().set(Right).set(Bottom).set(Near)));
-        gl_set_point(shape.get_point(Options<Sides>().set(Right).set(Bottom).set(Far)));
-        gl_set_point(shape.get_point(Options<Sides>().set(Right).set(Top).set(Far)));
-        gl_set_point(shape.get_point(Options<Sides>().set(Right).set(Top).set(Near)));
-        glEnd();
+            glDisable(GL_TEXTURE_2D);
 
-        gl_set_color(color * 0.4); 
-        glBegin(GL_QUADS);
-        gl_set_point(shape.get_point(Options<Sides>().set(Left).set(Bottom).set(Far)));
-        gl_set_point(shape.get_point(Options<Sides>().set(Right).set(Bottom).set(Far)));
-        gl_set_point(shape.get_point(Options<Sides>().set(Right).set(Top).set(Far)));
-        gl_set_point(shape.get_point(Options<Sides>().set(Left).set(Top).set(Far)));
-        glEnd();
+            gl_set_color(color * 0.5); 
+            glBegin(GL_QUADS);
+            gl_set_point(shape.get_point(Options<Sides>().set(Left).set(Bottom).set(Near)));
+            gl_set_point(shape.get_point(Options<Sides>().set(Left).set(Bottom).set(Far)));
+            gl_set_point(shape.get_point(Options<Sides>().set(Left).set(Top).set(Far)));
+            gl_set_point(shape.get_point(Options<Sides>().set(Left).set(Top).set(Near)));
+            glEnd();
 
-        gl_set_color(color); 
-        glBegin(GL_QUADS);
-        gl_set_point(shape.get_point(Options<Sides>().set(Left).set(Top).set(Near)));
-        gl_set_point(shape.get_point(Options<Sides>().set(Right).set(Top).set(Near)));
-        gl_set_point(shape.get_point(Options<Sides>().set(Right).set(Top).set(Far)));
-        gl_set_point(shape.get_point(Options<Sides>().set(Left).set(Top).set(Far)));
-        glEnd();
+            gl_set_color(color * 0.5); 
+            glBegin(GL_QUADS);
+            gl_set_point(shape.get_point(Options<Sides>().set(Right).set(Bottom).set(Near)));
+            gl_set_point(shape.get_point(Options<Sides>().set(Right).set(Bottom).set(Far)));
+            gl_set_point(shape.get_point(Options<Sides>().set(Right).set(Top).set(Far)));
+            gl_set_point(shape.get_point(Options<Sides>().set(Right).set(Top).set(Near)));
+            glEnd();
+
+            gl_set_color(color * 0.4); 
+            glBegin(GL_QUADS);
+            gl_set_point(shape.get_point(Options<Sides>().set(Left).set(Bottom).set(Far)));
+            gl_set_point(shape.get_point(Options<Sides>().set(Right).set(Bottom).set(Far)));
+            gl_set_point(shape.get_point(Options<Sides>().set(Right).set(Top).set(Far)));
+            gl_set_point(shape.get_point(Options<Sides>().set(Left).set(Top).set(Far)));
+            glEnd();
+
+            glEnable(GL_TEXTURE_2D);
+            glBindTexture(GL_TEXTURE_2D, used_texture->get_texture());
+
+            gl_set_color({1.0, 1.0, 1.0}); 
+            glBegin(GL_QUADS);
+            used_texture->uv_map_point(Options<Sides>(Left, Bottom), shape.get_size().x, shape.get_size().z);
+            gl_set_point(shape.get_point(Options<Sides>().set(Left).set(Top).set(Near)));
+            used_texture->uv_map_point(Options<Sides>(Right, Bottom), shape.get_size().x, shape.get_size().z);
+            gl_set_point(shape.get_point(Options<Sides>().set(Right).set(Top).set(Near)));
+            used_texture->uv_map_point(Options<Sides>(Right, Top), shape.get_size().x, shape.get_size().z);
+            gl_set_point(shape.get_point(Options<Sides>().set(Right).set(Top).set(Far)));
+            used_texture->uv_map_point(Options<Sides>(Left, Top), shape.get_size().x, shape.get_size().z);
+            gl_set_point(shape.get_point(Options<Sides>().set(Left).set(Top).set(Far)));
+            glEnd();
+
+            glDisable(GL_TEXTURE_2D);
+        }
+        else {
+            gl_set_color(color * 0.4); 
+            glBegin(GL_QUADS);
+            gl_set_point(shape.get_point(Options<Sides>().set(Left).set(Bottom).set(Near)));
+            gl_set_point(shape.get_point(Options<Sides>().set(Right).set(Bottom).set(Near)));
+            gl_set_point(shape.get_point(Options<Sides>().set(Right).set(Top).set(Near)));
+            gl_set_point(shape.get_point(Options<Sides>().set(Left).set(Top).set(Near)));
+            glEnd();
+
+            gl_set_color(color * 0.5); 
+            glBegin(GL_QUADS);
+            gl_set_point(shape.get_point(Options<Sides>().set(Left).set(Bottom).set(Near)));
+            gl_set_point(shape.get_point(Options<Sides>().set(Left).set(Bottom).set(Far)));
+            gl_set_point(shape.get_point(Options<Sides>().set(Left).set(Top).set(Far)));
+            gl_set_point(shape.get_point(Options<Sides>().set(Left).set(Top).set(Near)));
+            glEnd();
+
+            gl_set_color(color * 0.5); 
+            glBegin(GL_QUADS);
+            gl_set_point(shape.get_point(Options<Sides>().set(Right).set(Bottom).set(Near)));
+            gl_set_point(shape.get_point(Options<Sides>().set(Right).set(Bottom).set(Far)));
+            gl_set_point(shape.get_point(Options<Sides>().set(Right).set(Top).set(Far)));
+            gl_set_point(shape.get_point(Options<Sides>().set(Right).set(Top).set(Near)));
+            glEnd();
+
+            gl_set_color(color * 0.4); 
+            glBegin(GL_QUADS);
+            gl_set_point(shape.get_point(Options<Sides>().set(Left).set(Bottom).set(Far)));
+            gl_set_point(shape.get_point(Options<Sides>().set(Right).set(Bottom).set(Far)));
+            gl_set_point(shape.get_point(Options<Sides>().set(Right).set(Top).set(Far)));
+            gl_set_point(shape.get_point(Options<Sides>().set(Left).set(Top).set(Far)));
+            glEnd();
+
+            gl_set_color(color); 
+            glBegin(GL_QUADS);
+            gl_set_point(shape.get_point(Options<Sides>().set(Left).set(Top).set(Near)));
+            gl_set_point(shape.get_point(Options<Sides>().set(Right).set(Top).set(Near)));
+            gl_set_point(shape.get_point(Options<Sides>().set(Right).set(Top).set(Far)));
+            gl_set_point(shape.get_point(Options<Sides>().set(Left).set(Top).set(Far)));
+            glEnd();
+        }
     }
 }

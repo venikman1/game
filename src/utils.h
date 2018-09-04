@@ -14,7 +14,6 @@ namespace gm_engine {
         unsigned int options;
     public:
         Options();
-        Options(const T &option);
         template<typename ...Args>
         Options(const T &option, const Args &...other);
         Options& set(const T &option);
@@ -23,17 +22,11 @@ namespace gm_engine {
     };
 
     template<typename T>
-    Options<T>::Options(const T &option)
-    {
-        options |= option;
-    }
-
-    template<typename T>
     template<typename ...Args>
     Options<T>::Options(const T &option, const Args &...other):
         Options(other...)
     {
-        options |= 1 << option;
+        set(option);
     }
 
     template<typename T>

@@ -69,6 +69,8 @@ gm_engine::Controller controller;
 
 GLuint texture;
 
+gm_engine::Texture* wood;
+
 void init() // Called before main loop to set up the program
 {
     glClearColor(0.0, 0.0, 0.0, 0.0);
@@ -91,7 +93,13 @@ void init() // Called before main loop to set up the program
     world.add_entity(&cube2);
     world.add_entity(&cube3);
     world.add_entity(&ground);
-    //std::cout << player.get_shape().get_point(gm_engine::Cube::LEFT|gm_engine::Cube::BOTTOM|gm_engine::Cube::NEAR) << "\n";
+
+    wood = new gm_engine::Texture("img/stone2.png");
+    wood->get_in_game_size() = {40.0, 40.0, 0.0};
+
+    ground.used_texture = wood;
+
+    // std::cout << player.get_shape().get_point(gm_engine::Cube::LEFT|gm_engine::Cube::BOTTOM|gm_engine::Cube::NEAR) << "\n";
 }
 
 // Called at the start of the program, after a glutPostRedisplay() and during idle
@@ -144,6 +152,7 @@ void display()
         glVertex3f(0.0f, 0.0f, 100.0f);
     glEnd();
 
+    glBindTexture(GL_TEXTURE_2D, texture);
     glEnable(GL_TEXTURE_2D);
     glColor4f(1.0f, 1.0f, 1.0f, 1.0f); 
     glBegin(GL_QUADS);
@@ -320,7 +329,7 @@ int main(int argc, char **argv)
     // Starts the program.
     glutMainLoop();
 
-    
+    delete wood;
    
     return 0;
 }
