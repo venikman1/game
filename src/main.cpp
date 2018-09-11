@@ -21,7 +21,7 @@ gm_engine::Entity player(
     {0.0, 0.0, 0.0},
     10.0,
     false,
-    10.0
+    9.0
 );
 gm_engine::Entity cube(
     gm_engine::Cube(
@@ -30,7 +30,7 @@ gm_engine::Entity cube(
     ),
     {0.4, 0.4, 0.7},
     {0.0, 0.0, 0.0},
-    1.0,
+    20.0,
     false
 );
 gm_engine::Entity cube2(
@@ -40,7 +40,7 @@ gm_engine::Entity cube2(
     ),
     {0.4, 0.4, 0.7},
     {100.0, 0.0, 0.0},
-    1.0,
+    20.0,
     false
 );
 gm_engine::Entity cube3(
@@ -49,7 +49,7 @@ gm_engine::Entity cube3(
         {20.0, 40.0, 20.0}
     ),
     {0.4, 0.4, 0.7},
-    {50.0, 0.0, 0.0},
+    {10.0, 0.0, 0.0},
     1.0,
     true
 );
@@ -98,8 +98,6 @@ void init() // Called before main loop to set up the program
     wood->get_in_game_size() = {40.0, 40.0, 0.0};
 
     ground.used_texture = wood;
-
-    // std::cout << player.get_shape().get_point(gm_engine::Cube::LEFT|gm_engine::Cube::BOTTOM|gm_engine::Cube::NEAR) << "\n";
 }
 
 // Called at the start of the program, after a glutPostRedisplay() and during idle
@@ -257,7 +255,9 @@ void reshape(int w, int h)
     glViewport(0, 0, w, h);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
+
     glOrtho(-float(w)/3, float(w), -float(h)/3, float(h), 1000.0f, -1000.0f);
+
     GLfloat matrixf[16] = {  // Matrix for our projection
         1, 0, 0, 0,
         0, 1, 0, 0,

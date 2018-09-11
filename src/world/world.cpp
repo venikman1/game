@@ -58,6 +58,7 @@ namespace gm_engine {
                         //entities[i]->get_shape().move(axis_getter(-old_velocity * time));
                         axis_getter(entities[j]->get_velocity()) = axis_getter(entities[i]->get_velocity());
                         entities[j]->get_shape().move(axis_getter(axis_getter(entities[j]->get_velocity()) * time));
+                        // entities[i]->get_shape().move(axis_getter(-old_velocity * time));
                     }
                 }
             }
@@ -81,33 +82,35 @@ namespace gm_engine {
                 if (collide_with_static)
                     continue;
                 if (!intersections.empty()) {
-                    // std::vector<double> colls;
-                    // for (Entity* entity : intersections) {
-                    //     Options<Sides> side = (old_velocity > 0
-                    //         ? Options<Sides>().set(Sides::Left).set(Sides::Bottom).set(Sides::Near)
-                    //         : Options<Sides>().set(Sides::Right).set(Sides::Top).set(Sides::Far)
-                    //     );
 
-                    //     colls.push_back(
-                    //         axis_getter(entity->get_shape().get_point(side)) + 
-                    //         (side.is_set(Sides::Left) ? -EPS : EPS)
-                    //     );
-                    // }
-                    // double nearest_coll = colls[0];
-                    // for (double e : colls) {
-                    //     if (old_velocity > 0 && e < nearest_coll)
-                    //         nearest_coll = e;
-                    //     else if (old_velocity < 0 && e > nearest_coll)
-                    //         nearest_coll = e;
-                    // }
-                    // axis_getter(entities[i]->get_shape().get_position()) = nearest_coll; // FIXME: I am not working
+                    // EXPEREMENTAL CODE
+                    std::vector<double> colls;
+                    for (Entity* entity : intersections) {
+                        Options<Sides> side = (old_velocity > 0
+                            ? Options<Sides>().set(Sides::Left).set(Sides::Bottom).set(Sides::Near)
+                            : Options<Sides>().set(Sides::Right).set(Sides::Top).set(Sides::Far)
+                        );
+
+                        colls.push_back(
+                            axis_getter(entity->get_shape().get_point(side)) + 
+                            (side.is_set(Sides::Left) ? -EPS - axis_getter(entities[i]->get_shape().get_size()) : EPS)
+                        );
+                    }
+                    double nearest_coll = colls[0];
+                    for (double e : colls) {
+                        if (old_velocity > 0 && e < nearest_coll)
+                            nearest_coll = e;
+                        else if (old_velocity < 0 && e > nearest_coll)
+                            nearest_coll = e;
+                    }
+                    axis_getter(entities[i]->get_shape().get_position()) = nearest_coll; // FIXME: I am not working
 
                     axis_getter(get_collision_side(entities[i], old_velocity)) = intersections[0];  // FIXME: collision with not single object
                     for (Entity* entity : intersections) {
                         axis_getter(get_collision_side(entities[i], -old_velocity)) = entities[i];
                     }
                     intersections.push_back(entities[i]);
-                    entities[i]->get_shape().move(axis_getter(-old_velocity * time));
+                    // entities[i]->get_shape().move(axis_getter(-old_velocity * time));
 
                     // double vel_step = old_velocity / 2;
                     // while (std::fabs(vel_step) > EPS) {
