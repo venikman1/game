@@ -1,14 +1,48 @@
-CC=g++
-CFLAGS=-g --std=c++14
-LDFLAGS=-framework GLUT -framework OpenGL -lpng
-IFLAGS=-Isrc/
-SOURCES=src/main.cpp src/world/*.cpp src/controls/*cpp src/geometry/*.cpp src/graphics/*.cpp src/utils/*.cpp
-EXECUTABLE=test_build
+#
+# Makefile
+# Game prototype project
+#
+# Created by AnyKeyShik Rarity 2018-19-12
+#
 
-all: $(EXECUTABLE)
+# Compilers
+CC := g++
 
-$(EXECUTABLE):
-	$(CC) $(CFLAGS) $(LDFLAGS) $(IFLAGS) $(SOURCES) -o $(EXECUTABLE)
+# Flags
+CFLAGS := -g --std=c++14
+LDFLAGS := -F GLUT -F OpenGL -lpng -lglut -lGLU -lGL
+INCLUDE_FLAGS := -Iheaders
+
+# Folders
+SRCDIR := src
+TARGETDIR := bin
+
+# Files
+SRCTEXT := cpp
+SOURCES := $(shell find $(SRCDIR) -type f -name *.$(SRCTEXT))
+TEST_EXECUTABLE := test_build
+EXECUTABLE := build
+
+# Target
+TARGET := $(TARGETDIR)/$(EXECUTABLE)
+TEST_TARGET := $(TARGETDIR)/$(TEST_EXECUTABLE)
+
+frist: release
+
+$(TARGET): $(TARGETDIR)/$(EXECUTABLE)
+	@mkdir -p bin
+	$(CC) $(CFLAGS) $(LDFLAGS) $(INCLUDE_FLAGS) $(SOURCES) -o $(TARGET)
+
+$(TEST_TARGET): $(TARGETDIR)/$(TEST_EXECUTABLE)
+	@mkdir -p bin
+	$(CC) $(CFLAGS) $(LDFLAGS) $(INCLUDE_FLAGS) $(SOURCES) -o $(TEST_TARGET)
+
+test: $(TEST_TARGET)
+
+release: $(TARGET)
 
 clean:
-	rm -f $(EXECUTABLE)
+	@echo "Cleaning binaries..."
+	@rm -rf bin
+
+.PHONY: first, test, release, clean

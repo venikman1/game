@@ -1,7 +1,8 @@
 #include "graphics.h"
 
 #include <png.h>
-#include <stdio.h>
+#include <cstring>
+#include <cstdio>
 
 namespace gm_engine {
     Image::Image(std::string filename)
