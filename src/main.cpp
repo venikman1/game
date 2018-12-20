@@ -82,7 +82,7 @@ void init() // Called before main loop to set up the program
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    texture = gm_engine::Image("img/cat.png").load_texture();
+    texture = gm_engine::Image("res/pics/cat.png").load_texture();
     
     last_update = gm_engine::current_timestamp();
     last_check = gm_engine::current_timestamp();
@@ -94,7 +94,7 @@ void init() // Called before main loop to set up the program
     world.add_entity(&cube3);
     world.add_entity(&ground);
 
-    wood = new gm_engine::Texture("img/stone2.png");
+    wood = new gm_engine::Texture("res/textures/stone2.png");
     wood->get_in_game_size() = {40.0, 40.0, 0.0};
 
     ground.used_texture = wood;

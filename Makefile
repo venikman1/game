@@ -11,7 +11,7 @@ CC := g++
 # Flags
 CFLAGS := -g --std=c++14
 LDFLAGS := -F GLUT -F OpenGL -lpng -lglut -lGLU -lGL
-INCLUDE_FLAGS := -Iheaders
+INCLUDE_FLAGS := -I headers
 
 # Folders
 SRCDIR := src
@@ -27,13 +27,13 @@ EXECUTABLE := build
 TARGET := $(TARGETDIR)/$(EXECUTABLE)
 TEST_TARGET := $(TARGETDIR)/$(TEST_EXECUTABLE)
 
-frist: release
+first: test
 
-$(TARGET): $(TARGETDIR)/$(EXECUTABLE)
+$(TARGET):
 	@mkdir -p bin
 	$(CC) $(CFLAGS) $(LDFLAGS) $(INCLUDE_FLAGS) $(SOURCES) -o $(TARGET)
 
-$(TEST_TARGET): $(TARGETDIR)/$(TEST_EXECUTABLE)
+$(TEST_TARGET):
 	@mkdir -p bin
 	$(CC) $(CFLAGS) $(LDFLAGS) $(INCLUDE_FLAGS) $(SOURCES) -o $(TEST_TARGET)
 
