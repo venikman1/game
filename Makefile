@@ -31,11 +31,11 @@ first: test
 
 $(TARGET):
 	@mkdir -p bin
-	$(CC) $(CFLAGS) $(LDFLAGS) $(INCLUDE_FLAGS) $(SOURCES) -o $(TARGET)
+	$(CC) $(CFLAGS) $(INCLUDE_FLAGS) $(SOURCES) $(LDFLAGS) -o $(TARGET)
 
 $(TEST_TARGET):
 	@mkdir -p bin
-	$(CC) $(CFLAGS) $(LDFLAGS) $(INCLUDE_FLAGS) $(SOURCES) -o $(TEST_TARGET)
+	$(CC) $(CFLAGS) $(INCLUDE_FLAGS) $(SOURCES) $(LDFLAGS) -o $(TEST_TARGET)
 
 test: $(TEST_TARGET)
 
