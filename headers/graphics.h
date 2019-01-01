@@ -16,6 +16,9 @@
 namespace gm_engine {
     class Image
     {
+    /*
+        Image is used to load images from files and upload it to OpenGL.
+    */
     private:
         GLubyte *texture;
 
@@ -30,6 +33,9 @@ namespace gm_engine {
     };
 
     class Texture {
+    /*
+        Texture provides some useful functions to work with texturing.
+    */
     private:
         GLuint texture_id;
         Point<double> in_game_size;

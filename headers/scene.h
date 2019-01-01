@@ -5,6 +5,7 @@
 
 namespace gm_engine {
     class Scene {
+    // I don't knwo why I created this class. Maybe remove it?
     private:
         World world;
     

@@ -9,6 +9,12 @@ namespace gm_engine {
 
     template<typename T>
     class Options
+    /*
+        Options store settings using only one int.
+        Type T is a setting and it must be valued from 0 to 31.
+        T can be integer or enum.
+        Every setting can be set or unset/
+    */
     {
     private:
         unsigned int options;

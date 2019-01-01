@@ -8,7 +8,7 @@
 namespace gm_engine {
     class Entity {
     /*
-        Entity - is a physic body which is used by physic engine
+        Entity - is a physic body which is used by physic engine.
     */
     private:
         Cube shape;
@@ -46,6 +46,9 @@ namespace gm_engine {
     };
 
     class WorldObject {
+    /*
+        Abstract class, which is stored in World class.
+    */
     public:
         virtual Entity* get_entity() = 0;
         virtual void render() = 0;
@@ -54,6 +57,10 @@ namespace gm_engine {
     };
 
     class World {
+    /*
+        World stores all object which is used on current game scene. 
+        This class provide rendering, physic, game logic and another game actions with scene.
+    */
     private:
         std::vector<WorldObject*> objects;
         Point<double> gravity_acceleration = Point<double>(0, -100.0, 0);
@@ -65,7 +72,7 @@ namespace gm_engine {
         void add_object(WorldObject* object); /* Add object and take control of freeing memory */
         void render(); /* Render the whole world */
 
-        // TODO: move physic functions to another
+        // TODO: move physic functions to another place
         void process_physic(double time); /* Process physic for all entities */
 
         ~World();

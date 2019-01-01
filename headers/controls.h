@@ -5,6 +5,10 @@
 
 namespace gm_engine {
     class Controller {
+    /*
+        Controller provides unified way to work with user inputs.
+        (xbox controller, mouse, keyboard e.t.c.)
+    */
     private:
         std::vector<bool> pressed_keys;
         int mouse_x, mouse_y;
