@@ -12,6 +12,21 @@ double last_update;
 double last_check;
 unsigned int frames_passed;
 
+class Player : public gm_engine::WorldObject {
+    gm_engine::Entity &e;
+
+public:
+    Player(gm_engine::Entity &e): e(e) {}
+
+    void render() override {
+        e.render();
+    }
+
+    gm_engine::Entity* get_entity() override {
+        return &e;
+    }
+};
+
 gm_engine::Entity player(
     gm_engine::Cube(
         {100.0, 0.0, 100.0},
@@ -23,6 +38,7 @@ gm_engine::Entity player(
     false,
     9.0
 );
+
 gm_engine::Entity cube(
     gm_engine::Cube(
         {-100.0, 0.0, 100.0},
@@ -88,11 +104,11 @@ void init() // Called before main loop to set up the program
     last_check = gm_engine::current_timestamp();
     frames_passed = 0;
 
-    world.add_entity(&player);
-    world.add_entity(&cube);
-    world.add_entity(&cube2);
-    world.add_entity(&cube3);
-    world.add_entity(&ground);
+    world.add_object(new Player(player));
+    world.add_object(new Player(cube));
+    world.add_object(new Player(cube2));
+    world.add_object(new Player(cube3));
+    world.add_object(new Player(ground));
 
     wood = new gm_engine::Texture("res/textures/stone2.png");
     wood->get_in_game_size() = {40.0, 40.0, 0.0};

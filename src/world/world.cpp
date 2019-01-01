@@ -17,19 +17,21 @@ namespace gm_engine {
     }
 
 
-    void World::add_entity(Entity* entity) {
-        entities.push_back(entity);
+    void World::add_object(WorldObject* object) {
+        objects.push_back(object);
     }
+
     void World::render() {
-        for (Entity* entity : entities) {
-            entity->render();
+        for (WorldObject* object : objects) {
+            object->render();
         }
     }
 
     void World::apply_gravity(double time) {
-        for (int i = 0; i < entities.size(); ++i) {
-            if (!entities[i]->is_static())
-                entities[i]->get_velocity() += gravity_acceleration * time;
+        for (int i = 0; i < objects.size(); ++i) {
+            Entity* entity = objects[i]->get_entity();
+            if (entity && !entity->is_static())
+                entity->get_velocity() += gravity_acceleration * time;
         }
     }
 
@@ -41,7 +43,7 @@ namespace gm_engine {
     }
 
     template <typename Func> 
-    void World::process_physic_on_axis(double time, Func axis_getter) {
+    void World::process_physic_on_axis(std::vector<Entity*> &entities, double time, Func axis_getter) {
         for (int i = 0; i < entities.size(); ++i) {
             axis_getter(entities[i]->get_collision_from_left_side()) = 0;
             axis_getter(entities[i]->get_collision_from_right_side()) = 0;
@@ -171,13 +173,19 @@ namespace gm_engine {
     };
     void World::process_physic(double time) {
         apply_gravity(time);
+
+        std::vector<Entity*> entities;
+        for (auto object : objects)
+            if (object)
+                entities.push_back(object->get_entity());
+
         AxisGetter a;
         a.mode = AxisGetter::X;
-        process_physic_on_axis(time, a);
+        process_physic_on_axis(entities, time, a);
         a.mode = AxisGetter::Y;
-        process_physic_on_axis(time, a);
+        process_physic_on_axis(entities, time, a);
         a.mode = AxisGetter::Z;
-        process_physic_on_axis(time, a);
+        process_physic_on_axis(entities, time, a);
 
         for (auto entity : entities) {
             if (entity->is_static())
@@ -211,5 +219,10 @@ namespace gm_engine {
                 entity->get_velocity() -= relative_speed * friction * time / entity->get_mass();
             }
         }
+    }
+    
+    World::~World() {
+        for (WorldObject *object : objects)
+            delete object;
     }
 }

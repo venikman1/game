@@ -7,8 +7,9 @@
 
 namespace gm_engine {
     class Entity {
-    public:
-
+    /*
+        Entity - is a physic body which is used by physic engine
+    */
     private:
         Cube shape;
         Point<double> color;
@@ -39,22 +40,34 @@ namespace gm_engine {
         Point<Entity*>& get_collision_from_left_side();
         Point<Entity*>& get_collision_from_right_side();
 
-        void render();
+        void render(); // TODO: remove render from Entity
 
-        Texture* used_texture = 0;
+        Texture* used_texture = 0; // TODO: enhance texture using
+    };
+
+    class WorldObject {
+    public:
+        virtual Entity* get_entity() = 0;
+        virtual void render() = 0;
+
+        long long id;
     };
 
     class World {
     private:
-        std::vector<Entity*> entities; // This is a little bs
+        std::vector<WorldObject*> objects;
         Point<double> gravity_acceleration = Point<double>(0, -100.0, 0);
 
         void apply_gravity(double time);
         template <typename Func> 
-        void process_physic_on_axis(double time, Func axis_getter);
+        void process_physic_on_axis(std::vector<Entity*> &entities, double time, Func axis_getter);
     public:
-        void add_entity(Entity* entity);
-        void render();
-        void process_physic(double time);
+        void add_object(WorldObject* object); /* Add object and take control of freeing memory */
+        void render(); /* Render the whole world */
+
+        // TODO: move physic functions to another
+        void process_physic(double time); /* Process physic for all entities */
+
+        ~World();
     };
 }
