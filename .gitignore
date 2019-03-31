@@ -1,6 +1,9 @@
 
 # Created by https://www.gitignore.io/api/qt,c++,cmake,qtcreator,sublimetext,visualstudio,visualstudiocode
 
+### Bin dir ###
+./bin
+
 ### C++ ###
 # Prerequisites
 *.d
@@ -34,6 +37,9 @@
 *.exe
 *.out
 *.app
+
+# VsCode
+*/.vscode/*
 
 ### CMake ###
 CMakeCache.txt
